@@ -218,8 +218,31 @@ pre .kw{color:var(--accent-dk)}pre .str{color:var(--warn)}pre .cmt{color:var(--m
 .toast{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:10px 16px;font-size:13px;font-weight:600;animation:slideIn .2s ease;max-width:280px;box-shadow:var(--sh2);color:var(--text)}
 .toast.success{border-color:var(--accent);background:var(--accent-lt)}
 .toast.error{border-color:var(--danger);background:var(--danger-lt)}
-.toast.info{border-color:var(--blue);background:var(--blue-lt)}
 @keyframes slideIn{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
+/* RESPONSIVE LOG ENTRY */
+@media(max-width:640px){
+  .tbl-hint{display:none}
+  .table-wrap{border:none;background:transparent;box-shadow:none;overflow:visible}
+  table,thead,tbody,tfoot,tr,th,td{display:block}
+  thead{display:none}
+  #log-tbody tr{
+    background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);
+    margin-bottom:12px;padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;
+    box-shadow:var(--sh);position:relative
+  }
+  #log-tbody td{padding:0;text-align:left;border:none;height:auto}
+  #log-tbody td:first-child{position:absolute;top:8px;right:8px;width:34px;grid-column:span 2}
+  #log-tbody td:nth-child(2){grid-column:span 2;font-size:14px;color:var(--muted);margin-bottom:4px}
+  #log-tbody td:before{content:attr(data-label);display:block;font-size:9px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:3px;letter-spacing:.5px}
+  #log-tbody .stepper{width:100%}
+  #log-tbody .stp-inp{width:100%;flex:1}
+  tfoot tr{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:12px;background:var(--bg2);border-radius:var(--r);margin-top:10px}
+  tfoot td{padding:4px 0;background:transparent;text-align:left}
+  tfoot td:first-child{grid-column:span 2;text-align:center;border-bottom:1px solid var(--border);margin-bottom:5px;padding-bottom:5px}
+  tfoot td:before{content:attr(data-label);display:block;font-size:8px;color:var(--muted)}
+}
+.btn-excel{background:#1D6F42;color:#fff;font-size:12px;height:34px;padding:0 12px;border-radius:6px;border:none;cursor:pointer;display:flex;align-items:center;gap:5px;margin-left:auto}
+.btn-excel:active{background:#145230}
 </style>
 </head>
 <body>
@@ -284,29 +307,29 @@ pre .kw{color:var(--accent-dk)}pre .str{color:var(--warn)}pre .cmt{color:var(--m
 
   <div class="stat-bands">
     <div class="stat-band blue">
-      <div class="band-head">CBM 1 — LE1×G1×G2÷16M</div>
+      <div class="band-head">CBM 1 — LE1×G1×G2÷16M (m³)</div>
       <div class="band-body">
-        <div class="band-cell"><div class="bc-lbl">Total CBM 1</div><div class="bc-val" id="s-cbm1">0.000</div></div>
-        <div class="band-cell"><div class="bc-lbl">Total CFT 1</div><div class="bc-val" id="s-cft1">0.000</div></div>
-        <div class="band-cell"><div class="bc-lbl">Avg CBM 1</div><div class="bc-val" id="s-avg1">0.000</div></div>
+        <div class="band-cell"><div class="bc-lbl">Total CBM (m³)</div><div class="bc-val" id="s-cbm1">0.000</div></div>
+        <div class="band-cell"><div class="bc-lbl">Total CFT (ft³)</div><div class="bc-val" id="s-cft1">0.000</div></div>
+        <div class="band-cell"><div class="bc-lbl">Avg CBM (m³)</div><div class="bc-val" id="s-avg1">0.000</div></div>
       </div>
     </div>
     <div class="stat-band green">
-      <div class="band-head">CBM 2 — L×G1×G2÷16M</div>
+      <div class="band-head">CBM 2 — L×G1×G2÷16M (m³)</div>
       <div class="band-body">
-        <div class="band-cell"><div class="bc-lbl">Total CBM 2</div><div class="bc-val" id="s-cbm2">0.000</div></div>
-        <div class="band-cell"><div class="bc-lbl">Total CFT 2</div><div class="bc-val" id="s-cft2">0.000</div></div>
-        <div class="band-cell"><div class="bc-lbl">Avg CBM 2</div><div class="bc-val" id="s-avg2">0.000</div></div>
+        <div class="band-cell"><div class="bc-lbl">Total CBM (m³)</div><div class="bc-val" id="s-cbm2">0.000</div></div>
+        <div class="band-cell"><div class="bc-lbl">Total CFT (ft³)</div><div class="bc-val" id="s-cft2">0.000</div></div>
+        <div class="band-cell"><div class="bc-lbl">Avg CBM (m³)</div><div class="bc-val" id="s-avg2">0.000</div></div>
       </div>
     </div>
   </div>
 
   <div class="stat-row">
     <div class="stat-chip"><div class="bc-lbl">Pieces</div><div class="bc-val" id="s-pcs" style="color:var(--accent-dk)">0</div></div>
-    <div class="stat-chip"><div class="bc-lbl">Avg LE1</div><div class="bc-val" id="s-avgle">—</div></div>
-    <div class="stat-chip"><div class="bc-lbl">Avg L</div><div class="bc-val" id="s-avgl">—</div></div>
-    <div class="stat-chip"><div class="bc-lbl">Avg G1</div><div class="bc-val" id="s-avgg1">—</div></div>
-    <div class="stat-chip"><div class="bc-lbl">Avg G2</div><div class="bc-val" id="s-avgg2">—</div></div>
+    <div class="stat-chip"><div class="bc-lbl">Avg LE1 (cm)</div><div class="bc-val" id="s-avgle">—</div></div>
+    <div class="stat-chip"><div class="bc-lbl">Avg L (cm)</div><div class="bc-val" id="s-avgl">—</div></div>
+    <div class="stat-chip"><div class="bc-lbl">Avg G1 (cm)</div><div class="bc-val" id="s-avgg1">—</div></div>
+    <div class="stat-chip"><div class="bc-lbl">Avg G2 (cm)</div><div class="bc-val" id="s-avgg2">—</div></div>
   </div>
 
   <div class="tbl-hint">← Scroll sideways to see all columns →</div>
@@ -316,14 +339,12 @@ pre .kw{color:var(--accent-dk)}pre .str{color:var(--warn)}pre .cmt{color:var(--m
         <tr>
           <th>Del</th>
           <th>#</th>
-          <th>LE(1)</th>
-          <th>L</th>
-          <th>G1</th>
-          <th>G2</th>
-          <th class="h-blue">CBM 1</th>
-          <th class="h-blue">Run CBM1</th>
-          <th class="h-green">CBM 2</th>
-          <th class="h-green">Run CBM2</th>
+          <th>LE1 (cm)</th>
+          <th>L (cm)</th>
+          <th>G1 (cm)</th>
+          <th>G2 (cm)</th>
+          <th class="h-blue">CBM 1 (m³)</th>
+          <th class="h-green">CBM 2 (m³)</th>
         </tr>
       </thead>
       <tbody id="log-tbody"></tbody>
@@ -335,9 +356,7 @@ pre .kw{color:var(--accent-dk)}pre .str{color:var(--warn)}pre .cmt{color:var(--m
           <td id="ft-avgg1">—</td>
           <td id="ft-avgg2">—</td>
           <td id="ft-tcbm1" class="c-blue2">—</td>
-          <td id="ft-tcbm1b" class="c-blue2">—</td>
           <td id="ft-tcbm2" class="c-green2">—</td>
-          <td id="ft-tcbm2b" class="c-green2">—</td>
         </tr>
       </tfoot>
     </table>
@@ -361,10 +380,10 @@ pre .kw{color:var(--accent-dk)}pre .str{color:var(--warn)}pre .cmt{color:var(--m
   </div>
   <div class="kpi-grid">
     <div class="kpi-card km"><div class="kpi-lbl">Containers</div><div class="kpi-val" id="dt-n">0</div></div>
-    <div class="kpi-card kb"><div class="kpi-lbl">Total CBM 1</div><div class="kpi-val" id="dt-cbm1">0.000</div></div>
-    <div class="kpi-card kb"><div class="kpi-lbl">Total CFT 1</div><div class="kpi-val" id="dt-cft1">0.000</div></div>
-    <div class="kpi-card kg"><div class="kpi-lbl">Total CBM 2</div><div class="kpi-val" id="dt-cbm2">0.000</div></div>
-    <div class="kpi-card kg"><div class="kpi-lbl">Total CFT 2</div><div class="kpi-val" id="dt-cft2">0.000</div></div>
+    <div class="kpi-card kb"><div class="kpi-lbl">Total CBM 1 (m³)</div><div class="kpi-val" id="dt-cbm1">0.000</div></div>
+    <div class="kpi-card kb"><div class="kpi-lbl">Total CFT 1 (ft³)</div><div class="kpi-val" id="dt-cft1">0.000</div></div>
+    <div class="kpi-card kg"><div class="kpi-lbl">Total CBM 2 (m³)</div><div class="kpi-val" id="dt-cbm2">0.000</div></div>
+    <div class="kpi-card kg"><div class="kpi-lbl">Total CFT 2 (ft³)</div><div class="kpi-val" id="dt-cft2">0.000</div></div>
     <div class="kpi-card km"><div class="kpi-lbl">Total Pcs</div><div class="kpi-val" id="dt-pcs">0</div></div>
   </div>
   <div id="dash-list"></div>
@@ -392,7 +411,7 @@ pre .kw{color:var(--accent-dk)}pre .str{color:var(--warn)}pre .cmt{color:var(--m
       <div class="gs-num">1</div>
       <div class="gs-content">
         <h4>LOG_DATA — Row 1 headers</h4>
-        <p><code>ContainerNo</code> <code>Supplier</code> <code>Product</code> <code>Country</code> <code>Date</code> <code>Quality</code> <code>Incharge</code> <code>LogNo</code> <code>LE1</code> <code>L</code> <code>G1</code> <code>G2</code> <code>CBM1</code> <code>RunCBM1</code> <code>CBM2</code> <code>RunCBM2</code></p>
+        <p><code>ContainerNo</code> <code>Supplier</code> <code>Product</code> <code>Country</code> <code>Date</code> <code>Quality</code> <code>Incharge</code> <code>LogNo</code> <code>LE1</code> <code>L</code> <code>G1</code> <code>G2</code> <code>CBM1</code> <code>CBM2</code></p>
       </div>
     </div>
     <div class="gs-step">
@@ -420,7 +439,7 @@ pre .kw{color:var(--accent-dk)}pre .str{color:var(--warn)}pre .cmt{color:var(--m
     <span class="kw">const</span> h = data.header;
     data.logs.forEach(r =&gt; logSh.appendRow([
       h.container,h.supplier,h.product,h.country,h.date,h.quality,h.incharge,
-      r.no,r.le1,r.l,r.g1,r.g2,r.cbm1,r.runCbm1,r.cbm2,r.runCbm2
+      r.no,r.le1,r.l,r.g1,r.g2,r.cbm1,r.cbm2
     ]));
     <span class="kw">const</span> s = data.summary;
     <span class="kw">const</span> row = [h.container,h.supplier,h.product,h.country,h.date,h.quality,
@@ -492,7 +511,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('f-date').value = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
   renderDropdowns();
   if (config.gsUrl) document.getElementById('gs-url').value = config.gsUrl;
-  addLogs(5);
+  addLog(); // Start with one empty log instead of 5
   renderDashboard();
 });
 
@@ -553,7 +572,7 @@ function mkStepper(lid, field, val, ph, step, min){
     <button class="stp-btn" onclick="stepVal(${lid},'${field}',-${step},${min})" ontouchstart="">−</button>
     <div class="stp-div"></div>
     <input class="stp-inp" type="number" inputmode="numeric" pattern="[0-9]*"
-      value="${val}" placeholder="${ph}" min="${min}" step="${step}"
+      value="${val}" placeholder="" min="${min}" step="${step}"
       id="si-${lid}-${field}"
       onchange="onInput(${lid},'${field}',this.value)"
       oninput="onInput(${lid},'${field}',this.value)"
@@ -589,7 +608,7 @@ function onInput(id, field, val){
 
 // Recalculate only the computed columns — avoids destroying stepper DOM/focus
 function recalcDisplay(){
-  let run1=0,run2=0,sumLe1=0,sumL=0,sumG1=0,sumG2=0,vN=0;
+  let sumLe1=0,sumL=0,sumG1=0,sumG2=0,vN=0,run1=0,run2=0;
   const tbody=document.getElementById('log-tbody');
   logs.forEach((log,idx)=>{
     const{cbm1,cbm2,g1,g2,le1,l}=calcLog(log);
@@ -600,9 +619,7 @@ function recalcDisplay(){
     const warn=(g1>0&&g1<35)||(g2>0&&g2<35);
     row.classList.toggle('warn-row',warn);
     row.cells[6].textContent=cbm1>0?cbm1.toFixed(3):'—';
-    row.cells[7].textContent=run1>0?run1.toFixed(3):'—';
-    row.cells[8].textContent=cbm2>0?cbm2.toFixed(3):'—';
-    row.cells[9].textContent=run2>0?run2.toFixed(3):'—';
+    row.cells[7].textContent=cbm2>0?cbm2.toFixed(3):'—';
   });
   const n=vN||1;
   document.getElementById('ft-avgle').textContent=vN?(sumLe1/n).toFixed(1):'—';
@@ -610,9 +627,7 @@ function recalcDisplay(){
   document.getElementById('ft-avgg1').textContent=vN?(sumG1/n).toFixed(1):'—';
   document.getElementById('ft-avgg2').textContent=vN?(sumG2/n).toFixed(1):'—';
   document.getElementById('ft-tcbm1').textContent=run1>0?run1.toFixed(3):'—';
-  document.getElementById('ft-tcbm1b').textContent=run1>0?run1.toFixed(3):'—';
   document.getElementById('ft-tcbm2').textContent=run2>0?run2.toFixed(3):'—';
-  document.getElementById('ft-tcbm2b').textContent=run2>0?run2.toFixed(3):'—';
 }
 
 function updateStats(){
@@ -648,15 +663,13 @@ function renderTable(){
     const warn=(g1>0&&g1<35)||(g2>0&&g2<35);
     return `<tr${warn?' class="warn-row"':''}>
       <td><button class="del-btn" onclick="deleteLog(${log.id})">✕</button></td>
-      <td>${idx+1}${warn?'<span class="warn-badge">LOW</span>':''}</td>
-      <td>${mkStepper(log.id,'le1',log.le1,'260')}</td>
-      <td>${mkStepper(log.id,'l',log.l,'260')}</td>
-      <td>${mkStepper(log.id,'g1',log.g1,'70')}</td>
-      <td>${mkStepper(log.id,'g2',log.g2,'70')}</td>
-      <td class="c-blue">${cbm1>0?cbm1.toFixed(3):'—'}</td>
-      <td class="c-blue2">${run1>0?run1.toFixed(3):'—'}</td>
-      <td class="c-green">${cbm2>0?cbm2.toFixed(3):'—'}</td>
-      <td class="c-green2">${run2>0?run2.toFixed(3):'—'}</td>
+      <td>#${idx+1}${warn?'<span class="warn-badge">LOW</span>':''}</td>
+      <td data-label="LE1 (cm)">${mkStepper(log.id,'le1',log.le1,'260')}</td>
+      <td data-label="L (cm)">${mkStepper(log.id,'l',log.l,'260')}</td>
+      <td data-label="G1 (cm)">${mkStepper(log.id,'g1',log.g1,'70')}</td>
+      <td data-label="G2 (cm)">${mkStepper(log.id,'g2',log.g2,'70')}</td>
+      <td data-label="CBM 1 (m³)" class="c-blue">${cbm1>0?cbm1.toFixed(3):'—'}</td>
+      <td data-label="CBM 2 (m³)" class="c-green">${cbm2>0?cbm2.toFixed(3):'—'}</td>
     </tr>`;
   });
   document.getElementById('log-tbody').innerHTML=rows.join('');
@@ -666,9 +679,7 @@ function renderTable(){
   document.getElementById('ft-avgg1').textContent=vN?(sumG1/n).toFixed(1):'—';
   document.getElementById('ft-avgg2').textContent=vN?(sumG2/n).toFixed(1):'—';
   document.getElementById('ft-tcbm1').textContent=run1>0?run1.toFixed(3):'—';
-  document.getElementById('ft-tcbm1b').textContent=run1>0?run1.toFixed(3):'—';
   document.getElementById('ft-tcbm2').textContent=run2>0?run2.toFixed(3):'—';
-  document.getElementById('ft-tcbm2b').textContent=run2>0?run2.toFixed(3):'—';
   updateStats();
 }
 
@@ -703,7 +714,7 @@ async function confirmSubmit(){
     run2=parseFloat((run2+cbm2).toFixed(3));
     if(g1>0||g2>0){sumG1+=g1;sumG2+=g2;sumLe1+=le1;sumL+=l;vN++;}
     logRows.push({no:idx+1,le1:log.le1,l:log.l,g1:log.g1,g2:log.g2,
-      cbm1:cbm1.toFixed(3),runCbm1:run1.toFixed(3),cbm2:cbm2.toFixed(3),runCbm2:run2.toFixed(3)});
+      cbm1:cbm1.toFixed(3),cbm2:cbm2.toFixed(3)});
   });
   const n=vN||1;
   const payload={header,logs:logRows,summary:{
@@ -752,6 +763,7 @@ function renderDashboard(){
       <div class="cont-head">
         <span class="cont-id">${c.header.container}</span>
         <span class="cont-meta">${c.header.supplier} · ${c.header.country} · ${c.header.date}</span>
+        <button class="btn-excel" onclick="event.stopPropagation();downloadExcel('${c.header.container}')">📥 Excel</button>
       </div>
       <div class="pill-row">
         <span class="pill n">${c.header.product||'—'}</span>
@@ -762,6 +774,28 @@ function renderDashboard(){
         <span class="pill g">CFT2 ${c.summary.totalCft2}</span>
       </div>
     </div>`).join('');
+}
+
+function downloadExcel(id){
+  const c=containers.find(c=>c.header.container===id); if(!c) return;
+  let csv="Container Header\n";
+  csv+="Container ID,Supplier,Product,Country,Date,Quality,Incharge\n";
+  csv+=`"${c.header.container}","${c.header.supplier}","${c.header.product}","${c.header.country}","${c.header.date}","${c.header.quality}","${c.header.incharge}"\n\n`;
+  csv+="Log Measurements\n";
+  csv+="#,LE1 (cm),L (cm),G1 (cm),G2 (cm),CBM1 (m³),CBM2 (m³)\n";
+  c.logs.forEach(l=>{
+    csv+=`${l.no},${l.le1},${l.l},${l.g1},${l.g2},${l.cbm1},${l.cbm2}\n`;
+  });
+  csv+="\nSummary\n";
+  csv+="Total Pcs,Total CBM1,Total CFT1,Avg CBM1,Total CBM2,Total CFT2,Avg CBM2\n";
+  csv+=`${c.summary.pcs},${c.summary.totalCbm1},${c.summary.totalCft1},${c.summary.avgCbm1},${c.summary.totalCbm2},${c.summary.totalCft2},${c.summary.avgCbm2}`;
+  
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const link=document.createElement("a");
+  link.href=URL.createObjectURL(blob);
+  link.download=`TimberTrack_${id}.csv`;
+  link.click();
+  toast(`Downloading ${id}`,'info');
 }
 
 function loadContainer(id){
