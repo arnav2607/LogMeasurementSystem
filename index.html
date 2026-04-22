@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>TimberTrack</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #F4EFE6;
+  --bg2:       #EAE3D6;
+  --surface:   #FFFFFF;
+  --border:    #C5BAA5;
+  --border2:   #A5967E;
+  --text:      #18140F;
+  --text2:     #463B2E;
+  --muted:     #786A5C;
+  --accent:    #1B6E2F;
+  --accent-lt: #D2ECD8;
+  --accent-dk: #0E4A1E;
+  --blue:      #0B4F7A;
+  --blue-lt:   #CCE5F5;
+  --blue-dk:   #063350;
+  --warn:      #B84F00;
+  --warn-lt:   #FDEBD6;
+  --danger:    #BB0018;
+  --danger-lt: #FCDCDE;
+  --sh:        0 1px 6px rgba(0,0,0,.10);
+  --sh2:       0 3px 16px rgba(0,0,0,.14);
+  --r:         10px;
+  --touch:     52px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;min-height:100vh;font-size:15px}
+
+/* HEADER */
+.app-header{background:var(--text);padding:0 14px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,.3)}
+.brand{display:flex;align-items:center;gap:9px}
+.brand-icon{width:34px;height:34px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:19px}
+.brand-name{font-family:'Bebas Neue',sans-serif;font-size:23px;letter-spacing:2px;color:#fff}
+.brand-sub{font-size:9px;color:rgba(255,255,255,.45);letter-spacing:1px;text-transform:uppercase;line-height:1}
+.nav-tabs{display:flex;gap:2px}
+.nav-tab{min-height:38px;padding:0 12px;border-radius:7px;border:none;background:transparent;color:rgba(255,255,255,.5);font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s}
+.nav-tab:active{color:#fff;background:rgba(255,255,255,.12)}
+.nav-tab.active{background:var(--accent);color:#fff}
+.tab-lbl{display:none}
+@media(min-width:420px){.tab-lbl{display:inline}}
+
+/* VIEWS */
+.view{display:none;padding:14px;max-width:860px;margin:0 auto}
+.view.active{display:block}
+
+/* CARDS */
+.card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:15px;margin-bottom:13px;box-shadow:var(--sh)}
+.card-title{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1.5px;color:var(--text);margin-bottom:13px;padding-bottom:10px;border-bottom:2px solid var(--bg2);display:flex;align-items:center;gap:7px}
+
+/* FORM */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+@media(min-width:560px){.form-grid{grid-template-columns:repeat(3,1fr)}}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group label{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted)}
+.form-group input,
+.form-group select{
+  height:var(--touch);background:var(--bg);border:1.5px solid var(--border);border-radius:8px;
+  padding:0 13px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;
+  outline:none;transition:border-color .15s,box-shadow .15s;width:100%;-webkit-appearance:none
+}
+.form-group input:focus,.form-group select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-lt);background:#fff}
+.form-group input[readonly]{color:var(--muted);background:var(--bg2);cursor:default}
+.form-group select{
+  padding-right:34px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7'%3E%3Cpath fill='%23463B2E' d='M5.5 7L0 0h11z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;background-color:var(--bg)
+}
+.sel-row{display:flex;gap:7px}
+.sel-row select{flex:1;min-width:0}
+.add-btn{width:var(--touch);height:var(--touch);flex-shrink:0;background:var(--accent-lt);border:1.5px solid var(--accent);border-radius:8px;color:var(--accent-dk);font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;transition:all .15s}
+.add-btn:active{background:var(--accent);color:#fff}
+
+/* STAT BANDS */
+.stat-bands{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px}
+.stat-band{border-radius:var(--r);overflow:hidden;border:1.5px solid;box-shadow:var(--sh)}
+.stat-band.blue{border-color:var(--blue)}
+.stat-band.green{border-color:var(--accent)}
+.band-head{padding:6px 11px;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+.stat-band.blue .band-head{background:var(--blue);color:#fff}
+.stat-band.green .band-head{background:var(--accent);color:#fff}
+.band-body{display:grid;grid-template-columns:repeat(3,1fr);background:var(--surface)}
+.band-cell{padding:9px 8px 11px;border-right:1px solid var(--border);text-align:center}
+.band-cell:last-child{border-right:none}
+.bc-lbl{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px}
+.bc-val{font-family:'Bebas Neue',sans-serif;font-size:21px;letter-spacing:1px;line-height:1}
+.stat-band.blue .bc-val{color:var(--blue)}
+.stat-band.green .bc-val{color:var(--accent)}
+.stat-row{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-bottom:13px}
+.stat-chip{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:7px 5px;text-align:center;box-shadow:var(--sh)}
+.stat-chip .bc-lbl{font-size:8px}
+.stat-chip .bc-val{font-size:16px;color:var(--text2);font-family:'Bebas Neue',sans-serif}
+
+/* TABLE */
+.tbl-hint{font-size:10px;color:var(--muted);text-align:right;padding:3px 10px;letter-spacing:.5px}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--r);border:1.5px solid var(--border);background:var(--surface);box-shadow:var(--sh);margin-bottom:13px}
+table{width:100%;border-collapse:collapse;min-width:600px}
+thead th{background:var(--bg2);padding:9px 6px;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);text-align:right;white-space:nowrap;border-bottom:2px solid var(--border)}
+thead th:first-child,thead th:nth-child(2){text-align:center}
+thead th.h-blue{color:var(--blue);border-bottom-color:var(--blue)}
+thead th.h-green{color:var(--accent);border-bottom-color:var(--accent)}
+tbody tr{border-bottom:1px solid var(--bg2)}
+tbody tr:last-child{border-bottom:none}
+tbody tr:nth-child(even){background:#FAFAF7}
+tbody tr.warn-row{background:var(--warn-lt)}
+tbody td{padding:5px 6px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text2)}
+tbody td:first-child{text-align:center}
+tbody td:nth-child(2){text-align:center;font-weight:700;font-size:13px;color:var(--text)}
+tbody td.c-blue{color:var(--blue);font-weight:600}
+tbody td.c-blue2{color:var(--blue-dk);font-weight:700}
+tbody td.c-green{color:var(--accent);font-weight:600}
+tbody td.c-green2{color:var(--accent-dk);font-weight:700}
+
+/* STEPPER: [−] [value field] [+]  — no browser spinners, triggers numpad on mobile */
+.stepper{display:inline-flex;align-items:center;border:1.5px solid var(--border);border-radius:7px;overflow:hidden;background:var(--bg);height:40px;transition:border-color .12s,box-shadow .12s}
+.stepper.focused{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-lt);background:#fff}
+.stp-btn{
+  width:34px;height:100%;border:none;background:transparent;
+  color:var(--text2);font-size:19px;font-weight:700;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:background .1s,color .1s;
+  line-height:1;padding:0;
+  user-select:none;-webkit-user-select:none;
+  touch-action:manipulation
+}
+.stp-btn:active{background:var(--accent-lt);color:var(--accent-dk)}
+.stp-div{width:1px;background:var(--border);height:26px;flex-shrink:0}
+.stp-inp{
+  width:52px;height:100%;border:none;background:transparent;
+  color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:700;
+  text-align:center;outline:none;padding:0 2px;
+  -moz-appearance:textfield
+}
+.stp-inp::-webkit-inner-spin-button,
+.stp-inp::-webkit-outer-spin-button{-webkit-appearance:none}
+
+tfoot tr{border-top:2px solid var(--border2)}
+tfoot td{padding:7px 6px;background:var(--bg2);font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;text-align:right;color:var(--text2)}
+tfoot td:first-child{text-align:center;font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+tfoot td:nth-child(2){text-align:center}
+tfoot td.c-blue2{color:var(--blue-dk)}
+tfoot td.c-green2{color:var(--accent-dk)}
+
+.del-btn{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:15px;width:34px;height:34px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;transition:all .12s}
+.del-btn:active{color:var(--danger);background:var(--danger-lt)}
+.warn-badge{font-size:8px;background:var(--warn);color:#fff;border-radius:3px;padding:1px 4px;font-weight:700;vertical-align:middle;margin-left:3px;letter-spacing:.5px}
+
+/* BUTTONS */
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;padding-top:2px}
+.btn{height:var(--touch);padding:0 18px;border-radius:8px;border:none;font-family:'IBM Plex Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px;white-space:nowrap;touch-action:manipulation}
+.btn-ghost{background:var(--surface);color:var(--text2);border:1.5px solid var(--border)}
+.btn-ghost:active{border-color:var(--accent);color:var(--accent);background:var(--accent-lt)}
+.btn-danger{background:var(--danger-lt);color:var(--danger);border:1.5px solid rgba(187,0,24,.22)}
+.btn-danger:active{background:var(--danger);color:#fff}
+.btn-primary{background:var(--accent);color:#fff;font-size:15px;padding:0 26px;box-shadow:0 3px 10px rgba(27,110,47,.35)}
+.btn-primary:active{background:var(--accent-dk);transform:scale(.98)}
+
+/* BOTTOM SHEET MODALS */
+.mini-modal,.modal-overlay{display:none;position:fixed;inset:0;background:rgba(24,20,15,.55);z-index:300;align-items:flex-end;justify-content:center}
+.mini-modal.open,.modal-overlay.open{display:flex}
+.mini-box,.modal{
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:var(--r) var(--r) 0 0;padding:22px 18px 36px;
+  width:100%;max-width:520px;box-shadow:0 -6px 28px rgba(0,0,0,.14);
+  animation:slideUp .2s ease
+}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.mini-box h4,.modal h3{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--text);margin-bottom:13px;letter-spacing:1px}
+.mini-box input{width:100%;height:var(--touch);background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:0 13px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;outline:none;margin-bottom:13px}
+.mini-box input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-lt)}
+.mini-row,.modal-btns{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.modal p{color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:18px}
+
+/* DASHBOARD */
+.page-title{font-family:'Bebas Neue',sans-serif;font-size:25px;letter-spacing:2px;color:var(--text);margin-bottom:14px}
+.filter-bar{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+@media(min-width:480px){.filter-bar{flex-direction:row;flex-wrap:wrap}}
+.filter-bar input,.filter-bar select{flex:1;min-width:0;height:46px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:0 13px;color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:14px;outline:none;transition:border-color .15s;-webkit-appearance:none}
+.filter-bar select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7'%3E%3Cpath fill='%23463B2E' d='M5.5 7L0 0h11z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-color:var(--surface)}
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px}
+@media(min-width:480px){.kpi-grid{grid-template-columns:repeat(6,1fr)}}
+.kpi-card{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:9px 11px;box-shadow:var(--sh)}
+.kpi-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
+.kpi-val{font-family:'Bebas Neue',sans-serif;font-size:19px;line-height:1.1}
+.kpi-card.kb{border-color:var(--blue)}.kpi-card.kb .kpi-val{color:var(--blue)}
+.kpi-card.kg{border-color:var(--accent)}.kpi-card.kg .kpi-val{color:var(--accent-dk)}
+.kpi-card.km .kpi-val{color:var(--text)}
+.cont-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:13px 15px;margin-bottom:9px;cursor:pointer;transition:border-color .15s,box-shadow .15s;box-shadow:var(--sh)}
+.cont-card:active{background:var(--bg2);border-color:var(--accent)}
+.cont-head{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:7px}
+.cont-id{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:700;color:var(--text)}
+.cont-meta{font-size:12px;color:var(--muted)}
+.pill-row{display:flex;gap:5px;flex-wrap:wrap}
+.pill{font-size:10px;padding:3px 9px;border-radius:20px;font-family:'IBM Plex Mono',monospace;font-weight:600;white-space:nowrap}
+.pill.n{background:var(--bg2);border:1px solid var(--border);color:var(--text2)}
+.pill.b{background:var(--blue-lt);border:1px solid var(--blue);color:var(--blue-dk)}
+.pill.g{background:var(--accent-lt);border:1px solid var(--accent);color:var(--accent-dk)}
+.empty{text-align:center;padding:56px 20px;color:var(--muted)}
+.empty div{font-size:38px;margin-bottom:10px}
+
+/* SETUP */
+.gs-step{display:flex;gap:13px;margin-bottom:18px}
+.gs-num{width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.gs-content h4{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px}
+.gs-content p{font-size:12px;color:var(--muted);line-height:1.6}
+.gs-content code{background:var(--bg2);border:1px solid var(--border);padding:1px 5px;border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent-dk)}
+pre{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text);overflow-x:auto;line-height:1.7;margin-top:7px}
+pre .kw{color:var(--accent-dk)}pre .str{color:var(--warn)}pre .cmt{color:var(--muted);font-style:italic}
+
+/* TOAST */
+.toast-wrap{position:fixed;bottom:20px;right:14px;display:flex;flex-direction:column;gap:7px;z-index:999}
+.toast{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:10px 16px;font-size:13px;font-weight:600;animation:slideIn .2s ease;max-width:280px;box-shadow:var(--sh2);color:var(--text)}
+.toast.success{border-color:var(--accent);background:var(--accent-lt)}
+.toast.error{border-color:var(--danger);background:var(--danger-lt)}
+.toast.info{border-color:var(--blue);background:var(--blue-lt)}
+@keyframes slideIn{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="brand">
+    <div class="brand-icon">🪵</div>
+    <div>
+      <div class="brand-name">TimberTrack</div>
+      <div class="brand-sub">Log Measurement</div>
+    </div>
+  </div>
+  <nav class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('entry',this)">📋 <span class="tab-lbl">Entry</span></button>
+    <button class="nav-tab" onclick="switchTab('dashboard',this)">📊 <span class="tab-lbl">Dashboard</span></button>
+    <button class="nav-tab" onclick="switchTab('setup',this)">⚙️ <span class="tab-lbl">Setup</span></button>
+  </nav>
+</header>
+
+<!-- ENTRY -->
+<div id="view-entry" class="view active">
+
+  <div class="card">
+    <div class="card-title">📦 Container Header</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Supplier</label>
+        <div class="sel-row">
+          <select id="f-supplier"></select>
+          <button class="add-btn" onclick="openAddModal('supplier')">＋</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Product / Species</label>
+        <input type="text" id="f-product" placeholder="e.g. ECU 6×20" value="ECU 6×20" inputmode="text">
+      </div>
+      <div class="form-group">
+        <label>Country of Origin</label>
+        <div class="sel-row">
+          <select id="f-country"></select>
+          <button class="add-btn" onclick="openAddModal('country')">＋</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Container No.</label>
+        <input type="text" id="f-container" placeholder="e.g. 104090-9" inputmode="text">
+      </div>
+      <div class="form-group">
+        <label>Date</label>
+        <input type="text" id="f-date" readonly>
+      </div>
+      <div class="form-group">
+        <label>Quality Code</label>
+        <input type="text" id="f-quality" placeholder="e.g. N5V" inputmode="text">
+      </div>
+      <div class="form-group">
+        <label>Incharge</label>
+        <input type="text" id="f-incharge" placeholder="Name" inputmode="text">
+      </div>
+    </div>
+  </div>
+
+  <div class="stat-bands">
+    <div class="stat-band blue">
+      <div class="band-head">CBM 1 — LE1×G1×G2÷16M</div>
+      <div class="band-body">
+        <div class="band-cell"><div class="bc-lbl">Total CBM 1</div><div class="bc-val" id="s-cbm1">0.000</div></div>
+        <div class="band-cell"><div class="bc-lbl">Total CFT 1</div><div class="bc-val" id="s-cft1">0.000</div></div>
+        <div class="band-cell"><div class="bc-lbl">Avg CBM 1</div><div class="bc-val" id="s-avg1">0.000</div></div>
+      </div>
+    </div>
+    <div class="stat-band green">
+      <div class="band-head">CBM 2 — L×G1×G2÷16M</div>
+      <div class="band-body">
+        <div class="band-cell"><div class="bc-lbl">Total CBM 2</div><div class="bc-val" id="s-cbm2">0.000</div></div>
+        <div class="band-cell"><div class="bc-lbl">Total CFT 2</div><div class="bc-val" id="s-cft2">0.000</div></div>
+        <div class="band-cell"><div class="bc-lbl">Avg CBM 2</div><div class="bc-val" id="s-avg2">0.000</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-chip"><div class="bc-lbl">Pieces</div><div class="bc-val" id="s-pcs" style="color:var(--accent-dk)">0</div></div>
+    <div class="stat-chip"><div class="bc-lbl">Avg LE1</div><div class="bc-val" id="s-avgle">—</div></div>
+    <div class="stat-chip"><div class="bc-lbl">Avg L</div><div class="bc-val" id="s-avgl">—</div></div>
+    <div class="stat-chip"><div class="bc-lbl">Avg G1</div><div class="bc-val" id="s-avgg1">—</div></div>
+    <div class="stat-chip"><div class="bc-lbl">Avg G2</div><div class="bc-val" id="s-avgg2">—</div></div>
+  </div>
+
+  <div class="tbl-hint">← Scroll sideways to see all columns →</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Del</th>
+          <th>#</th>
+          <th>LE(1)</th>
+          <th>L</th>
+          <th>G1</th>
+          <th>G2</th>
+          <th class="h-blue">CBM 1</th>
+          <th class="h-blue">Run CBM1</th>
+          <th class="h-green">CBM 2</th>
+          <th class="h-green">Run CBM2</th>
+        </tr>
+      </thead>
+      <tbody id="log-tbody"></tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2">TOTALS</td>
+          <td id="ft-avgle">—</td>
+          <td id="ft-avgl">—</td>
+          <td id="ft-avgg1">—</td>
+          <td id="ft-avgg2">—</td>
+          <td id="ft-tcbm1" class="c-blue2">—</td>
+          <td id="ft-tcbm1b" class="c-blue2">—</td>
+          <td id="ft-tcbm2" class="c-green2">—</td>
+          <td id="ft-tcbm2b" class="c-green2">—</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="addLog()">➕ Add Log</button>
+    <button class="btn btn-ghost" onclick="addLogs(10)">➕ Add 10</button>
+    <button class="btn btn-danger" onclick="clearLogs()">🗑 Clear</button>
+    <button class="btn btn-primary" onclick="submitContainer()">✅ Submit</button>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="view-dashboard" class="view">
+  <div class="page-title">📊 Dashboard</div>
+  <div class="filter-bar">
+    <input type="text" id="dash-search" placeholder="🔍 Search container / supplier…" oninput="renderDashboard()" inputmode="search">
+    <select id="dash-country" onchange="renderDashboard()"><option value="">All Countries</option></select>
+    <select id="dash-supplier" onchange="renderDashboard()"><option value="">All Suppliers</option></select>
+  </div>
+  <div class="kpi-grid">
+    <div class="kpi-card km"><div class="kpi-lbl">Containers</div><div class="kpi-val" id="dt-n">0</div></div>
+    <div class="kpi-card kb"><div class="kpi-lbl">Total CBM 1</div><div class="kpi-val" id="dt-cbm1">0.000</div></div>
+    <div class="kpi-card kb"><div class="kpi-lbl">Total CFT 1</div><div class="kpi-val" id="dt-cft1">0.000</div></div>
+    <div class="kpi-card kg"><div class="kpi-lbl">Total CBM 2</div><div class="kpi-val" id="dt-cbm2">0.000</div></div>
+    <div class="kpi-card kg"><div class="kpi-lbl">Total CFT 2</div><div class="kpi-val" id="dt-cft2">0.000</div></div>
+    <div class="kpi-card km"><div class="kpi-lbl">Total Pcs</div><div class="kpi-val" id="dt-pcs">0</div></div>
+  </div>
+  <div id="dash-list"></div>
+</div>
+
+<!-- SETUP -->
+<div id="view-setup" class="view">
+  <div class="card">
+    <div class="card-title">🔗 Google Sheets</div>
+    <div class="form-group" style="margin-bottom:12px">
+      <label>Apps Script Web App URL</label>
+      <input type="text" id="gs-url" placeholder="https://script.google.com/macros/s/…/exec" oninput="saveConfig()" inputmode="url">
+    </div>
+    <div id="gs-status" style="font-size:13px;color:var(--muted);margin-bottom:13px">⚠️ Not connected — paste your Apps Script URL above.</div>
+    <button class="btn btn-ghost" onclick="testConnection()">🔄 Test Connection</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📋 Sheet Setup Guide</div>
+    <p style="color:var(--muted);font-size:13px;margin-bottom:18px;line-height:1.6">
+      Create a Google Sheet with tabs <strong style="color:var(--text)">LOG_DATA</strong> and <strong style="color:var(--text)">SUMMARY</strong>.
+      Go to <strong style="color:var(--text)">Extensions → Apps Script</strong>, paste the code, deploy as Web App (Execute as: Me · Access: Anyone).
+    </p>
+    <div class="gs-step">
+      <div class="gs-num">1</div>
+      <div class="gs-content">
+        <h4>LOG_DATA — Row 1 headers</h4>
+        <p><code>ContainerNo</code> <code>Supplier</code> <code>Product</code> <code>Country</code> <code>Date</code> <code>Quality</code> <code>Incharge</code> <code>LogNo</code> <code>LE1</code> <code>L</code> <code>G1</code> <code>G2</code> <code>CBM1</code> <code>RunCBM1</code> <code>CBM2</code> <code>RunCBM2</code></p>
+      </div>
+    </div>
+    <div class="gs-step">
+      <div class="gs-num">2</div>
+      <div class="gs-content">
+        <h4>SUMMARY — Row 1 headers</h4>
+        <p><code>ContainerNo</code> <code>Supplier</code> <code>Product</code> <code>Country</code> <code>Date</code> <code>Quality</code> <code>Pcs</code> <code>TotalCBM1</code> <code>TotalCFT1</code> <code>AvgCBM1</code> <code>TotalCBM2</code> <code>TotalCFT2</code> <code>AvgCBM2</code></p>
+      </div>
+    </div>
+    <div class="gs-step">
+      <div class="gs-num">3</div>
+      <div class="gs-content">
+        <h4>Apps Script Code</h4>
+        <pre id="apps-script-code"><span class="cmt">// TimberTrack — paste in Apps Script, deploy as Web App</span>
+<span class="kw">const</span> SS_ID = <span class="str">'YOUR_SPREADSHEET_ID'</span>;
+
+<span class="kw">function</span> doPost(e) {
+  <span class="kw">const</span> lock = LockService.getScriptLock();
+  lock.tryLock(10000);
+  <span class="kw">try</span> {
+    <span class="kw">const</span> data = JSON.parse(e.postData.contents);
+    <span class="kw">const</span> ss = SpreadsheetApp.openById(SS_ID);
+    <span class="kw">const</span> logSh = ss.getSheetByName(<span class="str">'LOG_DATA'</span>);
+    <span class="kw">const</span> sumSh = ss.getSheetByName(<span class="str">'SUMMARY'</span>);
+    <span class="kw">const</span> h = data.header;
+    data.logs.forEach(r =&gt; logSh.appendRow([
+      h.container,h.supplier,h.product,h.country,h.date,h.quality,h.incharge,
+      r.no,r.le1,r.l,r.g1,r.g2,r.cbm1,r.runCbm1,r.cbm2,r.runCbm2
+    ]));
+    <span class="kw">const</span> s = data.summary;
+    <span class="kw">const</span> row = [h.container,h.supplier,h.product,h.country,h.date,h.quality,
+      s.pcs,s.totalCbm1,s.totalCft1,s.avgCbm1,s.totalCbm2,s.totalCft2,s.avgCbm2];
+    <span class="kw">const</span> ex = findRow(sumSh, h.container);
+    <span class="kw">if</span> (ex &gt; 0) sumSh.getRange(ex,1,1,row.length).setValues([row]);
+    <span class="kw">else</span> sumSh.appendRow(row);
+    <span class="kw">return</span> ContentService.createTextOutput(JSON.stringify({status:<span class="str">'ok'</span>}))
+      .setMimeType(ContentService.MimeType.JSON);
+  } <span class="kw">finally</span> { lock.releaseLock(); }
+}
+
+<span class="kw">function</span> doGet() {
+  <span class="kw">const</span> rows = SpreadsheetApp.openById(SS_ID)
+    .getSheetByName(<span class="str">'SUMMARY'</span>).getDataRange().getValues();
+  <span class="kw">const</span> hd = rows[0];
+  <span class="kw">return</span> ContentService.createTextOutput(JSON.stringify({
+    status:<span class="str">'ok'</span>,
+    data: rows.slice(1).map(r =&gt; Object.fromEntries(hd.map((k,i)=&gt;[k,r[i]])))
+  })).setMimeType(ContentService.MimeType.JSON);
+}
+
+<span class="kw">function</span> findRow(sh, id) {
+  <span class="kw">const</span> v = sh.getRange(1,1,sh.getLastRow(),1).getValues();
+  <span class="kw">for</span> (<span class="kw">let</span> i=1; i&lt;v.length; i++) <span class="kw">if</span>(v[i][0]==id) <span class="kw">return</span> i+1;
+  <span class="kw">return</span> -1;
+}</pre>
+        <button class="btn btn-ghost" style="margin-top:9px" onclick="copyScript()">📋 Copy Script</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD MODAL -->
+<div class="mini-modal" id="add-modal">
+  <div class="mini-box">
+    <h4 id="add-modal-title">Add Supplier</h4>
+    <input type="text" id="add-modal-input" placeholder="Enter name…" inputmode="text" onkeydown="if(event.key==='Enter')confirmAdd()">
+    <div class="mini-row">
+      <button class="btn btn-primary" style="justify-content:center" onclick="confirmAdd()">Add</button>
+      <button class="btn btn-ghost" style="justify-content:center" onclick="closeAddModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- SUBMIT MODAL -->
+<div class="modal-overlay" id="submit-modal">
+  <div class="modal">
+    <h3>✅ Submit Container</h3>
+    <p id="modal-msg">Confirm…</p>
+    <div class="modal-btns">
+      <button class="btn btn-primary" style="justify-content:center" onclick="confirmSubmit()">Confirm &amp; Send</button>
+      <button class="btn btn-ghost" style="justify-content:center" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+let logs = [], logCounter = 0;
+let containers = JSON.parse(localStorage.getItem('tt_containers') || '[]');
+let config     = JSON.parse(localStorage.getItem('tt_config')     || '{}');
+let suppliers  = JSON.parse(localStorage.getItem('tt_suppliers')  || '["SAWING","TROPICAL TIMBER CO.","AMAZON LOGS LTD.","PACIFIC HARDWOOD","CEDAR VALLEY EXPORTS"]');
+let countries  = JSON.parse(localStorage.getItem('tt_countries')  || '["Ecuador","Brazil","Indonesia","Malaysia","Myanmar","Cameroon","Gabon","Congo"]');
+let addTarget  = '';
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('f-date').value = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+  renderDropdowns();
+  if (config.gsUrl) document.getElementById('gs-url').value = config.gsUrl;
+  addLogs(5);
+  renderDashboard();
+});
+
+function renderDropdowns() {
+  const sSel=document.getElementById('f-supplier'), cSel=document.getElementById('f-country');
+  const sv=sSel.value, cv=cSel.value;
+  sSel.innerHTML='<option value="">— Select Supplier —</option>'+suppliers.map(s=>`<option>${s}</option>`).join('');
+  cSel.innerHTML='<option value="">— Select Country —</option>'+countries.map(c=>`<option>${c}</option>`).join('');
+  if(sv) sSel.value=sv; if(cv) cSel.value=cv;
+  const ds=document.getElementById('dash-supplier'), dc=document.getElementById('dash-country');
+  if(ds){const v=ds.value;ds.innerHTML='<option value="">All Suppliers</option>'+suppliers.map(s=>`<option>${s}</option>`).join('');ds.value=v;}
+  if(dc){const v=dc.value;dc.innerHTML='<option value="">All Countries</option>'+countries.map(c=>`<option>${c}</option>`).join('');dc.value=v;}
+}
+
+function openAddModal(type){
+  addTarget=type;
+  document.getElementById('add-modal-title').textContent=type==='supplier'?'Add New Supplier':'Add New Country';
+  document.getElementById('add-modal-input').value='';
+  document.getElementById('add-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('add-modal-input').focus(),100);
+}
+function closeAddModal(){document.getElementById('add-modal').classList.remove('open');}
+function confirmAdd(){
+  const val=document.getElementById('add-modal-input').value.trim();
+  if(!val){toast('Enter a name','error');return;}
+  if(addTarget==='supplier'){
+    if(!suppliers.includes(val)){suppliers.push(val);localStorage.setItem('tt_suppliers',JSON.stringify(suppliers));}
+    renderDropdowns();document.getElementById('f-supplier').value=val;
+    toast(`Supplier "${val}" added`,'success');
+  } else {
+    if(!countries.includes(val)){countries.push(val);localStorage.setItem('tt_countries',JSON.stringify(countries));}
+    renderDropdowns();document.getElementById('f-country').value=val;
+    toast(`Country "${val}" added`,'success');
+  }
+  closeAddModal();
+}
+
+function switchTab(name,btn){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  btn.classList.add('active');
+  if(name==='dashboard') renderDashboard();
+}
+
+function calcLog(log){
+  const le1=parseFloat(log.le1)||0, l=parseFloat(log.l)||0;
+  const g1=parseFloat(log.g1)||0,  g2=parseFloat(log.g2)||0;
+  const cbm1=(le1&&g1&&g2)?parseFloat(((le1*g1*g2)/16000000).toFixed(3)):0;
+  const cbm2=(l&&g1&&g2)?parseFloat(((l*g1*g2)/16000000).toFixed(3)):0;
+  return{cbm1,cbm2,g1,g2,le1,l};
+}
+
+// Build stepper HTML — triggers numeric keypad on mobile, no browser spinners
+function mkStepper(lid, field, val, ph, step, min){
+  step=step||1; min=min||0;
+  return `<div class="stepper" id="sp-${lid}-${field}">
+    <button class="stp-btn" onclick="stepVal(${lid},'${field}',-${step},${min})" ontouchstart="">−</button>
+    <div class="stp-div"></div>
+    <input class="stp-inp" type="number" inputmode="numeric" pattern="[0-9]*"
+      value="${val}" placeholder="${ph}" min="${min}" step="${step}"
+      id="si-${lid}-${field}"
+      onchange="onInput(${lid},'${field}',this.value)"
+      oninput="onInput(${lid},'${field}',this.value)"
+      onfocus="this.closest('.stepper').classList.add('focused')"
+      onblur="this.closest('.stepper').classList.remove('focused')">
+    <div class="stp-div"></div>
+    <button class="stp-btn" onclick="stepVal(${lid},'${field}',${step},${min})" ontouchstart="">＋</button>
+  </div>`;
+}
+
+function stepVal(id, field, delta, min){
+  const log=logs.find(l=>l.id===id); if(!log) return;
+  let v=(parseFloat(log[field])||0)+delta;
+  if(v<min) v=min;
+  log[field]=v;
+  const inp=document.getElementById(`si-${id}-${field}`);
+  if(inp) inp.value=v;
+  recalcDisplay();
+  updateStats();
+}
+
+function addLog(){logCounter++;logs.push({id:logCounter,le1:'',l:'',g1:'',g2:''});renderTable();document.getElementById('log-tbody').lastElementChild?.scrollIntoView({behavior:'smooth',block:'nearest'});}
+function addLogs(n){for(let i=0;i<n;i++) addLog();}
+function deleteLog(id){logs=logs.filter(l=>l.id!==id);renderTable();}
+function clearLogs(){if(!confirm('Clear all logs?')) return;logs=[];logCounter=0;renderTable();}
+
+function onInput(id, field, val){
+  const log=logs.find(l=>l.id===id);
+  if(log) log[field]=val;
+  recalcDisplay();
+  updateStats();
+}
+
+// Recalculate only the computed columns — avoids destroying stepper DOM/focus
+function recalcDisplay(){
+  let run1=0,run2=0,sumLe1=0,sumL=0,sumG1=0,sumG2=0,vN=0;
+  const tbody=document.getElementById('log-tbody');
+  logs.forEach((log,idx)=>{
+    const{cbm1,cbm2,g1,g2,le1,l}=calcLog(log);
+    run1=parseFloat((run1+cbm1).toFixed(3));
+    run2=parseFloat((run2+cbm2).toFixed(3));
+    if(g1>0||g2>0){sumLe1+=le1;sumL+=l;sumG1+=g1;sumG2+=g2;vN++;}
+    const row=tbody.rows[idx]; if(!row) return;
+    const warn=(g1>0&&g1<35)||(g2>0&&g2<35);
+    row.classList.toggle('warn-row',warn);
+    row.cells[6].textContent=cbm1>0?cbm1.toFixed(3):'—';
+    row.cells[7].textContent=run1>0?run1.toFixed(3):'—';
+    row.cells[8].textContent=cbm2>0?cbm2.toFixed(3):'—';
+    row.cells[9].textContent=run2>0?run2.toFixed(3):'—';
+  });
+  const n=vN||1;
+  document.getElementById('ft-avgle').textContent=vN?(sumLe1/n).toFixed(1):'—';
+  document.getElementById('ft-avgl').textContent=vN?(sumL/n).toFixed(1):'—';
+  document.getElementById('ft-avgg1').textContent=vN?(sumG1/n).toFixed(1):'—';
+  document.getElementById('ft-avgg2').textContent=vN?(sumG2/n).toFixed(1):'—';
+  document.getElementById('ft-tcbm1').textContent=run1>0?run1.toFixed(3):'—';
+  document.getElementById('ft-tcbm1b').textContent=run1>0?run1.toFixed(3):'—';
+  document.getElementById('ft-tcbm2').textContent=run2>0?run2.toFixed(3):'—';
+  document.getElementById('ft-tcbm2b').textContent=run2>0?run2.toFixed(3):'—';
+}
+
+function updateStats(){
+  let run1=0,run2=0,sumLe1=0,sumL=0,sumG1=0,sumG2=0,vN=0;
+  logs.forEach(log=>{
+    const c=calcLog(log);
+    run1=parseFloat((run1+c.cbm1).toFixed(3));
+    run2=parseFloat((run2+c.cbm2).toFixed(3));
+    if(c.g1>0||c.g2>0){sumLe1+=c.le1;sumL+=c.l;sumG1+=c.g1;sumG2+=c.g2;vN++;}
+  });
+  const filled=logs.filter(l=>parseFloat(l.g1)>0||parseFloat(l.g2)>0).length||1;
+  const n=vN||1;
+  document.getElementById('s-cbm1').textContent=run1.toFixed(3);
+  document.getElementById('s-cft1').textContent=(run1*35.315).toFixed(3);
+  document.getElementById('s-avg1').textContent=(run1/filled).toFixed(3);
+  document.getElementById('s-cbm2').textContent=run2.toFixed(3);
+  document.getElementById('s-cft2').textContent=(run2*35.315).toFixed(3);
+  document.getElementById('s-avg2').textContent=(run2/filled).toFixed(3);
+  document.getElementById('s-pcs').textContent=logs.length;
+  document.getElementById('s-avgle').textContent=vN?(sumLe1/n).toFixed(1):'—';
+  document.getElementById('s-avgl').textContent=vN?(sumL/n).toFixed(1):'—';
+  document.getElementById('s-avgg1').textContent=vN?(sumG1/n).toFixed(1):'—';
+  document.getElementById('s-avgg2').textContent=vN?(sumG2/n).toFixed(1):'—';
+}
+
+function renderTable(){
+  let run1=0,run2=0,sumLe1=0,sumL=0,sumG1=0,sumG2=0,vN=0;
+  const rows=logs.map((log,idx)=>{
+    const{cbm1,cbm2,g1,g2,le1,l}=calcLog(log);
+    run1=parseFloat((run1+cbm1).toFixed(3));
+    run2=parseFloat((run2+cbm2).toFixed(3));
+    if(g1>0||g2>0){sumLe1+=le1;sumL+=l;sumG1+=g1;sumG2+=g2;vN++;}
+    const warn=(g1>0&&g1<35)||(g2>0&&g2<35);
+    return `<tr${warn?' class="warn-row"':''}>
+      <td><button class="del-btn" onclick="deleteLog(${log.id})">✕</button></td>
+      <td>${idx+1}${warn?'<span class="warn-badge">LOW</span>':''}</td>
+      <td>${mkStepper(log.id,'le1',log.le1,'260')}</td>
+      <td>${mkStepper(log.id,'l',log.l,'260')}</td>
+      <td>${mkStepper(log.id,'g1',log.g1,'70')}</td>
+      <td>${mkStepper(log.id,'g2',log.g2,'70')}</td>
+      <td class="c-blue">${cbm1>0?cbm1.toFixed(3):'—'}</td>
+      <td class="c-blue2">${run1>0?run1.toFixed(3):'—'}</td>
+      <td class="c-green">${cbm2>0?cbm2.toFixed(3):'—'}</td>
+      <td class="c-green2">${run2>0?run2.toFixed(3):'—'}</td>
+    </tr>`;
+  });
+  document.getElementById('log-tbody').innerHTML=rows.join('');
+  const n=vN||1;
+  document.getElementById('ft-avgle').textContent=vN?(sumLe1/n).toFixed(1):'—';
+  document.getElementById('ft-avgl').textContent=vN?(sumL/n).toFixed(1):'—';
+  document.getElementById('ft-avgg1').textContent=vN?(sumG1/n).toFixed(1):'—';
+  document.getElementById('ft-avgg2').textContent=vN?(sumG2/n).toFixed(1):'—';
+  document.getElementById('ft-tcbm1').textContent=run1>0?run1.toFixed(3):'—';
+  document.getElementById('ft-tcbm1b').textContent=run1>0?run1.toFixed(3):'—';
+  document.getElementById('ft-tcbm2').textContent=run2>0?run2.toFixed(3):'—';
+  document.getElementById('ft-tcbm2b').textContent=run2>0?run2.toFixed(3):'—';
+  updateStats();
+}
+
+function submitContainer(){
+  const container=document.getElementById('f-container').value.trim();
+  const supplier=document.getElementById('f-supplier').value;
+  if(!container){toast('Enter container number','error');return;}
+  if(!supplier){toast('Select a supplier','error');return;}
+  const valid=logs.filter(l=>parseFloat(l.g1)>0&&parseFloat(l.g2)>0);
+  if(!valid.length){toast('Fill in log measurements','error');return;}
+  document.getElementById('modal-msg').innerHTML=`Submit <strong>${valid.length} logs</strong> for container <strong>${container}</strong>?`;
+  document.getElementById('submit-modal').classList.add('open');
+}
+function closeModal(){document.getElementById('submit-modal').classList.remove('open');}
+
+async function confirmSubmit(){
+  closeModal();
+  const header={
+    container:document.getElementById('f-container').value.trim(),
+    supplier:document.getElementById('f-supplier').value,
+    product:document.getElementById('f-product').value,
+    country:document.getElementById('f-country').value,
+    date:document.getElementById('f-date').value,
+    quality:document.getElementById('f-quality').value,
+    incharge:document.getElementById('f-incharge').value,
+  };
+  let run1=0,run2=0,sumG1=0,sumG2=0,sumLe1=0,sumL=0,vN=0;
+  const logRows=[];
+  logs.forEach((log,idx)=>{
+    const{cbm1,cbm2,g1,g2,le1,l}=calcLog(log);
+    run1=parseFloat((run1+cbm1).toFixed(3));
+    run2=parseFloat((run2+cbm2).toFixed(3));
+    if(g1>0||g2>0){sumG1+=g1;sumG2+=g2;sumLe1+=le1;sumL+=l;vN++;}
+    logRows.push({no:idx+1,le1:log.le1,l:log.l,g1:log.g1,g2:log.g2,
+      cbm1:cbm1.toFixed(3),runCbm1:run1.toFixed(3),cbm2:cbm2.toFixed(3),runCbm2:run2.toFixed(3)});
+  });
+  const n=vN||1;
+  const payload={header,logs:logRows,summary:{
+    pcs:logs.length,
+    totalCbm1:run1.toFixed(3),totalCft1:(run1*35.315).toFixed(3),avgCbm1:(run1/n).toFixed(3),
+    totalCbm2:run2.toFixed(3),totalCft2:(run2*35.315).toFixed(3),avgCbm2:(run2/n).toFixed(3),
+    avgG1:(sumG1/n).toFixed(2),avgG2:(sumG2/n).toFixed(2),
+  }};
+  const ex=containers.findIndex(c=>c.header.container===header.container);
+  if(ex>=0) containers[ex]=payload; else containers.push(payload);
+  localStorage.setItem('tt_containers',JSON.stringify(containers));
+  const gsUrl=document.getElementById('gs-url').value.trim();
+  if(gsUrl){
+    toast('Sending to Google Sheets…','info');
+    try{await fetch(gsUrl,{method:'POST',body:JSON.stringify(payload)});toast('✅ Sent to Google Sheets!','success');}
+    catch{toast('⚠️ Saved locally — Sheets sync failed','error');}
+  } else toast('✅ Saved locally (add Sheets URL in Setup)','success');
+  renderDashboard();
+}
+
+function renderDashboard(){
+  renderDropdowns();
+  const search=(document.getElementById('dash-search')?.value||'').toLowerCase();
+  const country=document.getElementById('dash-country')?.value||'';
+  const supplier=document.getElementById('dash-supplier')?.value||'';
+  const f=containers.filter(c=>{
+    const h=c.header;
+    if(search&&!h.container.toLowerCase().includes(search)&&!h.supplier.toLowerCase().includes(search)&&!h.country.toLowerCase().includes(search)) return false;
+    if(country&&h.country!==country) return false;
+    if(supplier&&h.supplier!==supplier) return false;
+    return true;
+  });
+  const tc1=f.reduce((s,c)=>s+parseFloat(c.summary.totalCbm1||0),0);
+  const tc2=f.reduce((s,c)=>s+parseFloat(c.summary.totalCbm2||0),0);
+  const tp=f.reduce((s,c)=>s+c.summary.pcs,0);
+  document.getElementById('dt-n').textContent=f.length;
+  document.getElementById('dt-cbm1').textContent=tc1.toFixed(3);
+  document.getElementById('dt-cft1').textContent=(tc1*35.315).toFixed(3);
+  document.getElementById('dt-cbm2').textContent=tc2.toFixed(3);
+  document.getElementById('dt-cft2').textContent=(tc2*35.315).toFixed(3);
+  document.getElementById('dt-pcs').textContent=tp;
+  const list=document.getElementById('dash-list');
+  if(!f.length){list.innerHTML=`<div class="empty"><div>🪵</div><p>No containers yet.<br>Submit your first in Entry.</p></div>`;return;}
+  list.innerHTML=f.map(c=>`
+    <div class="cont-card" onclick="loadContainer('${c.header.container}')">
+      <div class="cont-head">
+        <span class="cont-id">${c.header.container}</span>
+        <span class="cont-meta">${c.header.supplier} · ${c.header.country} · ${c.header.date}</span>
+      </div>
+      <div class="pill-row">
+        <span class="pill n">${c.header.product||'—'}</span>
+        <span class="pill n">${c.summary.pcs} pcs</span>
+        <span class="pill b">CBM1 ${c.summary.totalCbm1}</span>
+        <span class="pill b">CFT1 ${c.summary.totalCft1}</span>
+        <span class="pill g">CBM2 ${c.summary.totalCbm2}</span>
+        <span class="pill g">CFT2 ${c.summary.totalCft2}</span>
+      </div>
+    </div>`).join('');
+}
+
+function loadContainer(id){
+  const c=containers.find(c=>c.header.container===id); if(!c) return;
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('view-entry').classList.add('active');
+  document.querySelector('.nav-tab').classList.add('active');
+  document.getElementById('f-container').value=c.header.container;
+  document.getElementById('f-supplier').value=c.header.supplier;
+  document.getElementById('f-product').value=c.header.product;
+  document.getElementById('f-country').value=c.header.country;
+  document.getElementById('f-quality').value=c.header.quality||'';
+  document.getElementById('f-incharge').value=c.header.incharge||'';
+  logs=[];logCounter=0;
+  c.logs.forEach(l=>{logCounter++;logs.push({id:logCounter,le1:l.le1,l:l.l,g1:l.g1,g2:l.g2});});
+  renderTable();
+  toast(`Loaded ${id}`,'success');
+}
+
+function saveConfig(){config.gsUrl=document.getElementById('gs-url').value;localStorage.setItem('tt_config',JSON.stringify(config));}
+async function testConnection(){
+  const url=document.getElementById('gs-url').value.trim();
+  if(!url){toast('Enter Apps Script URL first','error');return;}
+  try{
+    await fetch(url);
+    document.getElementById('gs-status').innerHTML='✅ Connected.';
+    document.getElementById('gs-status').style.color='var(--accent)';
+    toast('✅ Connected!','success');
+  }catch{
+    document.getElementById('gs-status').innerHTML='❌ Connection failed.';
+    document.getElementById('gs-status').style.color='var(--danger)';
+    toast('Connection failed','error');
+  }
+}
+function copyScript(){navigator.clipboard.writeText(document.getElementById('apps-script-code').innerText).then(()=>toast('Script copied!','success'));}
+function toast(msg,type='success'){
+  const el=document.createElement('div');
+  el.className=`toast ${type}`;el.textContent=msg;
+  document.getElementById('toast-wrap').appendChild(el);
+  setTimeout(()=>el.remove(),3200);
+}
+</script>
+</body>
+</html>
