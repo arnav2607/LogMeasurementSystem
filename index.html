@@ -4,245 +4,822 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>TimberTrack</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:        #F4EFE6;
-  --bg2:       #EAE3D6;
-  --surface:   #FFFFFF;
-  --border:    #C5BAA5;
-  --border2:   #A5967E;
-  --text:      #18140F;
-  --text2:     #463B2E;
-  --muted:     #786A5C;
-  --accent:    #1B6E2F;
-  --accent-lt: #D2ECD8;
-  --accent-dk: #0E4A1E;
-  --blue:      #0B4F7A;
-  --blue-lt:   #CCE5F5;
-  --blue-dk:   #063350;
-  --warn:      #B84F00;
-  --warn-lt:   #FDEBD6;
-  --danger:    #BB0018;
-  --danger-lt: #FCDCDE;
-  --sh:        0 1px 6px rgba(0,0,0,.10);
-  --sh2:       0 3px 16px rgba(0,0,0,.14);
-  --r:         10px;
-  --touch:     52px;
+  --bg:         #F8F5F0;
+  --surface:    #FFFFFF;
+  --border:     #D9D0C4;
+  --text-dark:  #1A1410;
+  --text-mute:  #6B5F52;
+  --accent:     #2D7A3E;
+  --accent-lt:  #E8F5ED;
+  --accent-dk:  #1B4A25;
+  --warn:       #D97706;
+  --warn-lt:    #FEF3E2;
+  --danger:     #DC2626;
+  --info:       #0066CC;
+  --sh:         0 2px 8px rgba(0,0,0,0.08);
+  --sh2:        0 4px 16px rgba(0,0,0,0.12);
+  --r:          12px;
 }
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;min-height:100vh;font-size:15px}
 
-/* HEADER */
-.app-header{background:var(--text);padding:0 14px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,.3)}
-.brand{display:flex;align-items:center;gap:9px}
-.brand-icon{width:34px;height:34px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:19px}
-.brand-name{font-family:'Bebas Neue',sans-serif;font-size:23px;letter-spacing:2px;color:#fff}
-.brand-sub{font-size:9px;color:rgba(255,255,255,.45);letter-spacing:1px;text-transform:uppercase;line-height:1}
-.nav-tabs{display:flex;gap:2px}
-.nav-tab{min-height:38px;padding:0 12px;border-radius:7px;border:none;background:transparent;color:rgba(255,255,255,.5);font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .15s}
-.nav-tab:active{color:#fff;background:rgba(255,255,255,.12)}
-.nav-tab.active{background:var(--accent);color:#fff}
-.tab-lbl{display:none}
-@media(min-width:420px){.tab-lbl{display:inline}}
-
-/* VIEWS */
-.view{display:none;padding:14px;max-width:860px;margin:0 auto}
-.view.active{display:block}
-
-/* CARDS */
-.card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:15px;margin-bottom:13px;box-shadow:var(--sh)}
-.card-title{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1.5px;color:var(--text);margin-bottom:13px;padding-bottom:10px;border-bottom:2px solid var(--bg2);display:flex;align-items:center;gap:7px}
-
-/* FORM */
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
-@media(min-width:560px){.form-grid{grid-template-columns:repeat(3,1fr)}}
-.form-group{display:flex;flex-direction:column;gap:5px}
-.form-group label{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted)}
-.form-group input,
-.form-group select{
-  height:var(--touch);background:var(--bg);border:1.5px solid var(--border);border-radius:8px;
-  padding:0 13px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;
-  outline:none;transition:border-color .15s,box-shadow .15s;width:100%;-webkit-appearance:none
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
 }
-.form-group input:focus,.form-group select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-lt);background:#fff}
-.form-group input[readonly]{color:var(--muted);background:var(--bg2);cursor:default}
-.form-group select{
-  padding-right:34px;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7'%3E%3Cpath fill='%23463B2E' d='M5.5 7L0 0h11z'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 12px center;background-color:var(--bg)
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text-dark);
+  font-size: 16px;
+  min-height: 100vh;
 }
-.sel-row{display:flex;gap:7px}
-.sel-row select{flex:1;min-width:0}
-.add-btn{width:var(--touch);height:var(--touch);flex-shrink:0;background:var(--accent-lt);border:1.5px solid var(--accent);border-radius:8px;color:var(--accent-dk);font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;transition:all .15s}
-.add-btn:active{background:var(--accent);color:#fff}
 
-/* STAT BANDS */
-.stat-bands{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px}
-.stat-band{border-radius:var(--r);overflow:hidden;border:1.5px solid;box-shadow:var(--sh)}
-.stat-band.blue{border-color:var(--blue)}
-.stat-band.green{border-color:var(--accent)}
-.band-head{padding:6px 11px;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
-.stat-band.blue .band-head{background:var(--blue);color:#fff}
-.stat-band.green .band-head{background:var(--accent);color:#fff}
-.band-body{display:grid;grid-template-columns:repeat(3,1fr);background:var(--surface)}
-.band-cell{padding:9px 8px 11px;border-right:1px solid var(--border);text-align:center}
-.band-cell:last-child{border-right:none}
-.bc-lbl{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px}
-.bc-val{font-family:'Bebas Neue',sans-serif;font-size:21px;letter-spacing:1px;line-height:1}
-.stat-band.blue .bc-val{color:var(--blue)}
-.stat-band.green .bc-val{color:var(--accent)}
-.stat-row{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-bottom:13px}
-.stat-chip{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:7px 5px;text-align:center;box-shadow:var(--sh)}
-.stat-chip .bc-lbl{font-size:8px}
-.stat-chip .bc-val{font-size:16px;color:var(--text2);font-family:'Bebas Neue',sans-serif}
-
-/* TABLE */
-.tbl-hint{font-size:10px;color:var(--muted);text-align:right;padding:3px 10px;letter-spacing:.5px}
-.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--r);border:1.5px solid var(--border);background:var(--surface);box-shadow:var(--sh);margin-bottom:13px}
-table{width:100%;border-collapse:collapse;min-width:600px}
-thead th{background:var(--bg2);padding:9px 6px;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);text-align:right;white-space:nowrap;border-bottom:2px solid var(--border)}
-thead th:first-child,thead th:nth-child(2){text-align:center}
-thead th.h-blue{color:var(--blue);border-bottom-color:var(--blue)}
-thead th.h-green{color:var(--accent);border-bottom-color:var(--accent)}
-tbody tr{border-bottom:1px solid var(--bg2)}
-tbody tr:last-child{border-bottom:none}
-tbody tr:nth-child(even){background:#FAFAF7}
-tbody tr.warn-row{background:var(--warn-lt)}
-tbody td{padding:5px 6px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text2)}
-tbody td:first-child{text-align:center}
-tbody td:nth-child(2){text-align:center;font-weight:700;font-size:13px;color:var(--text)}
-tbody td.c-blue{color:var(--blue);font-weight:600}
-tbody td.c-blue2{color:var(--blue-dk);font-weight:700}
-tbody td.c-green{color:var(--accent);font-weight:600}
-tbody td.c-green2{color:var(--accent-dk);font-weight:700}
-
-/* STEPPER: [−] [value field] [+]  — no browser spinners, triggers numpad on mobile */
-.stepper{display:inline-flex;align-items:center;border:1.5px solid var(--border);border-radius:7px;overflow:hidden;background:var(--bg);height:40px;transition:border-color .12s,box-shadow .12s}
-.stepper.focused{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-lt);background:#fff}
-.stp-btn{
-  width:34px;height:100%;border:none;background:transparent;
-  color:var(--text2);font-size:19px;font-weight:700;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;transition:background .1s,color .1s;
-  line-height:1;padding:0;
-  user-select:none;-webkit-user-select:none;
-  touch-action:manipulation
+/* ===== HEADER ===== */
+.app-header {
+  background: var(--text-dark);
+  padding: 12px 16px;
+  height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--sh2);
 }
-.stp-btn:active{background:var(--accent-lt);color:var(--accent-dk)}
-.stp-div{width:1px;background:var(--border);height:26px;flex-shrink:0}
-.stp-inp{
-  width:52px;height:100%;border:none;background:transparent;
-  color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:700;
-  text-align:center;outline:none;padding:0 2px;
-  -moz-appearance:textfield
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
-.stp-inp::-webkit-inner-spin-button,
-.stp-inp::-webkit-outer-spin-button{-webkit-appearance:none}
 
-tfoot tr{border-top:2px solid var(--border2)}
-tfoot td{padding:7px 6px;background:var(--bg2);font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;text-align:right;color:var(--text2)}
-tfoot td:first-child{text-align:center;font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
-tfoot td:nth-child(2){text-align:center}
-tfoot td.c-blue2{color:var(--blue-dk)}
-tfoot td.c-green2{color:var(--accent-dk)}
-
-.del-btn{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:15px;width:34px;height:34px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;transition:all .12s}
-.del-btn:active{color:var(--danger);background:var(--danger-lt)}
-.warn-badge{font-size:8px;background:var(--warn);color:#fff;border-radius:3px;padding:1px 4px;font-weight:700;vertical-align:middle;margin-left:3px;letter-spacing:.5px}
-
-/* BUTTONS */
-.btn-row{display:flex;gap:8px;flex-wrap:wrap;padding-top:2px}
-.btn{height:var(--touch);padding:0 18px;border-radius:8px;border:none;font-family:'IBM Plex Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px;white-space:nowrap;touch-action:manipulation}
-.btn-ghost{background:var(--surface);color:var(--text2);border:1.5px solid var(--border)}
-.btn-ghost:active{border-color:var(--accent);color:var(--accent);background:var(--accent-lt)}
-.btn-danger{background:var(--danger-lt);color:var(--danger);border:1.5px solid rgba(187,0,24,.22)}
-.btn-danger:active{background:var(--danger);color:#fff}
-.btn-primary{background:var(--accent);color:#fff;font-size:15px;padding:0 26px;box-shadow:0 3px 10px rgba(27,110,47,.35)}
-.btn-primary:active{background:var(--accent-dk);transform:scale(.98)}
-
-/* BOTTOM SHEET MODALS */
-.mini-modal,.modal-overlay{display:none;position:fixed;inset:0;background:rgba(24,20,15,.55);z-index:300;align-items:flex-end;justify-content:center}
-.mini-modal.open,.modal-overlay.open{display:flex}
-.mini-box,.modal{
-  background:var(--surface);border:1.5px solid var(--border);
-  border-radius:var(--r) var(--r) 0 0;padding:22px 18px 36px;
-  width:100%;max-width:520px;box-shadow:0 -6px 28px rgba(0,0,0,.14);
-  animation:slideUp .2s ease
+.brand-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
 }
-@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.mini-box h4,.modal h3{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--text);margin-bottom:13px;letter-spacing:1px}
-.mini-box input{width:100%;height:var(--touch);background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:0 13px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;outline:none;margin-bottom:13px}
-.mini-box input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-lt)}
-.mini-row,.modal-btns{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.modal p{color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:18px}
 
-/* DASHBOARD */
-.page-title{font-family:'Bebas Neue',sans-serif;font-size:25px;letter-spacing:2px;color:var(--text);margin-bottom:14px}
-.filter-bar{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
-@media(min-width:480px){.filter-bar{flex-direction:row;flex-wrap:wrap}}
-.filter-bar input,.filter-bar select{flex:1;min-width:0;height:46px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:0 13px;color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:14px;outline:none;transition:border-color .15s;-webkit-appearance:none}
-.filter-bar select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7'%3E%3Cpath fill='%23463B2E' d='M5.5 7L0 0h11z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-color:var(--surface)}
-.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px}
-@media(min-width:480px){.kpi-grid{grid-template-columns:repeat(6,1fr)}}
-.kpi-card{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:9px 11px;box-shadow:var(--sh)}
-.kpi-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
-.kpi-val{font-family:'Bebas Neue',sans-serif;font-size:19px;line-height:1.1}
-.kpi-card.kb{border-color:var(--blue)}.kpi-card.kb .kpi-val{color:var(--blue)}
-.kpi-card.kg{border-color:var(--accent)}.kpi-card.kg .kpi-val{color:var(--accent-dk)}
-.kpi-card.km .kpi-val{color:var(--text)}
-.cont-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:13px 15px;margin-bottom:9px;cursor:pointer;transition:border-color .15s,box-shadow .15s;box-shadow:var(--sh)}
-.cont-card:active{background:var(--bg2);border-color:var(--accent)}
-.cont-head{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:7px}
-.cont-id{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:700;color:var(--text)}
-.cont-meta{font-size:12px;color:var(--muted)}
-.pill-row{display:flex;gap:5px;flex-wrap:wrap}
-.pill{font-size:10px;padding:3px 9px;border-radius:20px;font-family:'IBM Plex Mono',monospace;font-weight:600;white-space:nowrap}
-.pill.n{background:var(--bg2);border:1px solid var(--border);color:var(--text2)}
-.pill.b{background:var(--blue-lt);border:1px solid var(--blue);color:var(--blue-dk)}
-.pill.g{background:var(--accent-lt);border:1px solid var(--accent);color:var(--accent-dk)}
-.empty{text-align:center;padding:56px 20px;color:var(--muted)}
-.empty div{font-size:38px;margin-bottom:10px}
+.brand-name {
+  color: #FFF;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
 
-/* SETUP */
-.gs-step{display:flex;gap:13px;margin-bottom:18px}
-.gs-num{width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
-.gs-content h4{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px}
-.gs-content p{font-size:12px;color:var(--muted);line-height:1.6}
-.gs-content code{background:var(--bg2);border:1px solid var(--border);padding:1px 5px;border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent-dk)}
-pre{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text);overflow-x:auto;line-height:1.7;margin-top:7px}
-pre .kw{color:var(--accent-dk)}pre .str{color:var(--warn)}pre .cmt{color:var(--muted);font-style:italic}
+.nav-tabs {
+  display: flex;
+  gap: 0;
+}
 
-/* TOAST */
-.toast-wrap{position:fixed;bottom:20px;right:14px;display:flex;flex-direction:column;gap:7px;z-index:999}
-.toast{background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:10px 16px;font-size:13px;font-weight:600;animation:slideIn .2s ease;max-width:280px;box-shadow:var(--sh2);color:var(--text)}
-.toast.success{border-color:var(--accent);background:var(--accent-lt)}
-.toast.error{border-color:var(--danger);background:var(--danger-lt)}
-@keyframes slideIn{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
-/* RESPONSIVE LOG ENTRY */
-@media(max-width:640px){
-  .tbl-hint{display:none}
-  .table-wrap{border:none;background:transparent;box-shadow:none;overflow:visible}
-  table,thead,tbody,tfoot,tr,th,td{display:block}
-  thead{display:none}
-  #log-tbody tr{
-    background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);
-    margin-bottom:12px;padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;
-    box-shadow:var(--sh);position:relative
+.nav-tab {
+  height: 44px;
+  padding: 0 16px;
+  border: none;
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.6);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-left: 4px;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  touch-action: manipulation;
+}
+
+.nav-tab:active {
+  background: rgba(255,255,255,0.2);
+  color: #FFF;
+}
+
+.nav-tab.active {
+  background: var(--accent);
+  color: #FFF;
+}
+
+/* ===== VIEWS ===== */
+.view {
+  display: none;
+  padding: 16px;
+  max-width: 900px;
+  margin: 0 auto;
+  animation: fadeIn 0.2s ease;
+}
+
+.view.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0.95; }
+  to { opacity: 1; }
+}
+
+/* ===== CARDS ===== */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 18px;
+  margin-bottom: 14px;
+  box-shadow: var(--sh);
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--bg);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ===== FORM ===== */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+@media(min-width: 600px) {
+  .form-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
-  #log-tbody td{padding:0;text-align:left;border:none;height:auto}
-  #log-tbody td:first-child{position:absolute;top:8px;right:8px;width:34px;grid-column:span 2}
-  #log-tbody td:nth-child(2){grid-column:span 2;font-size:14px;color:var(--muted);margin-bottom:4px}
-  #log-tbody td:before{content:attr(data-label);display:block;font-size:9px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:3px;letter-spacing:.5px}
-  #log-tbody .stepper{width:100%}
-  #log-tbody .stp-inp{width:100%;flex:1}
-  tfoot tr{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:12px;background:var(--bg2);border-radius:var(--r);margin-top:10px}
-  tfoot td{padding:4px 0;background:transparent;text-align:left}
-  tfoot td:first-child{grid-column:span 2;text-align:center;border-bottom:1px solid var(--border);margin-bottom:5px;padding-bottom:5px}
-  tfoot td:before{content:attr(data-label);display:block;font-size:8px;color:var(--muted)}
 }
-.btn-excel{background:#1D6F42;color:#fff;font-size:12px;height:34px;padding:0 12px;border-radius:6px;border:none;cursor:pointer;display:flex;align-items:center;gap:5px;margin-left:auto}
-.btn-excel:active{background:#145230}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+
+.form-group input,
+.form-group select {
+  height: 48px;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 0 14px;
+  color: var(--text-dark);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 15px;
+  font-weight: 600;
+  outline: none;
+  transition: all 0.15s;
+  width: 100%;
+  -webkit-appearance: none;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-lt);
+  background: #FFF;
+}
+
+.form-group input[readonly] {
+  color: var(--text-mute);
+  background: var(--bg);
+  cursor: default;
+}
+
+.form-group select {
+  padding-right: 36px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%231A1410' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-color: var(--bg);
+}
+
+.sel-row {
+  display: flex;
+  gap: 8px;
+}
+
+.sel-row select {
+  flex: 1;
+}
+
+.add-btn {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  background: var(--accent-lt);
+  border: 1.5px solid var(--accent);
+  border-radius: 8px;
+  color: var(--accent-dk);
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  transition: all 0.15s;
+  touch-action: manipulation;
+}
+
+.add-btn:active {
+  background: var(--accent);
+  color: #FFF;
+}
+
+/* ===== VERTICAL FEEDING LAYOUT ===== */
+.feed-card {
+  background: var(--surface);
+  border: 2px solid var(--accent-lt);
+  border-radius: var(--r);
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: var(--sh);
+  position: relative;
+}
+
+.feed-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--bg);
+}
+
+.feed-num {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-lt);
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.feed-del {
+  background: none;
+  border: none;
+  color: var(--text-mute);
+  cursor: pointer;
+  font-size: 20px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.15s;
+  touch-action: manipulation;
+}
+
+.feed-del:active {
+  color: var(--danger);
+  background: rgba(220, 38, 38, 0.1);
+}
+
+.feed-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.feed-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.feed-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+
+.feed-input {
+  height: 52px;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 0 14px;
+  color: var(--text-dark);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  outline: none;
+  transition: all 0.15s;
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+}
+
+.feed-input::-webkit-inner-spin-button,
+.feed-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+.feed-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-lt);
+  background: #FFF;
+}
+
+.feed-warn {
+  border-color: var(--warn);
+  background: var(--warn-lt);
+}
+
+.feed-warn:focus {
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2);
+}
+
+/* ===== STATS ===== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+@media(min-width: 480px) {
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.stat-chip {
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 10px;
+  text-align: center;
+  box-shadow: var(--sh);
+}
+
+.stat-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--accent-dk);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* ===== SUMMARY TABLE ===== */
+.summary-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 16px;
+  border-radius: var(--r);
+  box-shadow: var(--sh);
+  border: 1px solid var(--border);
+}
+
+.summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+  background: var(--surface);
+}
+
+.summary-table thead {
+  background: var(--bg);
+  border-bottom: 2px solid var(--border);
+}
+
+.summary-table th {
+  padding: 10px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  text-align: center;
+  white-space: nowrap;
+  border-right: 1px solid var(--border);
+}
+
+.summary-table th:last-child {
+  border-right: none;
+}
+
+.summary-table tbody tr {
+  border-bottom: 1px solid var(--bg);
+}
+
+.summary-table tbody tr:nth-child(even) {
+  background: #FAFAF7;
+}
+
+.summary-table tbody tr.warn {
+  background: var(--warn-lt);
+}
+
+.summary-table td {
+  padding: 8px 6px;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--text-dark);
+  font-family: 'IBM Plex Mono', monospace;
+  border-right: 1px solid var(--border);
+}
+
+.summary-table td:last-child {
+  border-right: none;
+}
+
+.td-cbm {
+  color: var(--accent-dk);
+}
+
+/* ===== BUTTONS ===== */
+.btn-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.btn {
+  height: 48px;
+  padding: 0 20px;
+  border-radius: 8px;
+  border: none;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  touch-action: manipulation;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #FFF;
+  box-shadow: 0 2px 8px rgba(45, 122, 62, 0.3);
+}
+
+.btn-primary:active {
+  background: var(--accent-dk);
+  transform: scale(0.98);
+}
+
+.btn-ghost {
+  background: var(--surface);
+  color: var(--text-dark);
+  border: 1.5px solid var(--border);
+}
+
+.btn-ghost:active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-lt);
+}
+
+.btn-danger {
+  background: rgba(220, 38, 38, 0.1);
+  color: var(--danger);
+  border: 1.5px solid rgba(220, 38, 38, 0.3);
+}
+
+.btn-danger:active {
+  background: var(--danger);
+  color: #FFF;
+}
+
+.btn-small {
+  height: 40px;
+  padding: 0 14px;
+  font-size: 13px;
+}
+
+/* ===== DASHBOARD ===== */
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 16px;
+}
+
+.filter-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+@media(min-width: 500px) {
+  .filter-bar {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+.filter-bar input,
+.filter-bar select {
+  flex: 1;
+  min-width: 140px;
+  height: 48px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 0 14px;
+  color: var(--text-dark);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.15s;
+  -webkit-appearance: none;
+}
+
+.filter-bar select {
+  padding-right: 36px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%231A1410' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-color: var(--surface);
+}
+
+.filter-bar input:focus,
+.filter-bar select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-lt);
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+@media(min-width: 480px) {
+  .kpi-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.kpi-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 12px;
+  text-align: center;
+  box-shadow: var(--sh);
+}
+
+.kpi-card.accent {
+  border-color: var(--accent);
+  background: var(--accent-lt);
+}
+
+.kpi-lbl {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  margin-bottom: 4px;
+}
+
+.kpi-val {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--accent-dk);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.cont-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cont-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+  box-shadow: var(--sh);
+}
+
+.cont-card:active {
+  border-color: var(--accent);
+  background: var(--accent-lt);
+}
+
+.cont-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.cont-id {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-dark);
+  font-family: 'IBM Plex Mono', monospace;
+  background: var(--bg);
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.cont-meta {
+  font-size: 13px;
+  color: var(--text-mute);
+  flex: 1;
+}
+
+.pill-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.pill {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  background: var(--bg);
+  color: var(--text-dark);
+  border: 1px solid var(--border);
+}
+
+.pill.accent {
+  background: var(--accent-lt);
+  border-color: var(--accent);
+  color: var(--accent-dk);
+}
+
+.empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-mute);
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.empty-text {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ===== MODALS ===== */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 20, 16, 0.5);
+  z-index: 300;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.modal-overlay.open {
+  display: flex;
+}
+
+.modal-box {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r) var(--r) 0 0;
+  padding: 24px 18px 32px;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: var(--sh2);
+  animation: slideUp 0.2s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 14px;
+}
+
+.modal-msg {
+  color: var(--text-mute);
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+
+.modal-btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.modal-input {
+  width: 100%;
+  height: 48px;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 0 14px;
+  color: var(--text-dark);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 15px;
+  font-weight: 600;
+  outline: none;
+  margin-bottom: 12px;
+  transition: all 0.15s;
+}
+
+.modal-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-lt);
+}
+
+/* ===== TOAST ===== */
+.toast-wrap {
+  position: fixed;
+  bottom: 20px;
+  right: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 999;
+  max-width: 300px;
+}
+
+.toast {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  animation: slideIn 0.2s ease;
+  box-shadow: var(--sh2);
+  color: var(--text-dark);
+}
+
+.toast.success {
+  border-color: var(--accent);
+  background: var(--accent-lt);
+  color: var(--accent-dk);
+}
+
+.toast.error {
+  border-color: var(--danger);
+  background: rgba(220, 38, 38, 0.1);
+  color: var(--danger);
+}
+
+@keyframes slideIn {
+  from { transform: translateX(110%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
 </style>
 </head>
 <body>
@@ -250,24 +827,28 @@ pre .kw{color:var(--accent-dk)}pre .str{color:var(--warn)}pre .cmt{color:var(--m
 <header class="app-header">
   <div class="brand">
     <div class="brand-icon">🪵</div>
-    <div>
-      <div class="brand-name">TimberTrack</div>
-      <div class="brand-sub">Log Measurement</div>
-    </div>
+    <div class="brand-name">TimberTrack</div>
   </div>
   <nav class="nav-tabs">
-    <button class="nav-tab active" onclick="switchTab('entry',this)">📋 <span class="tab-lbl">Entry</span></button>
-    <button class="nav-tab" onclick="switchTab('dashboard',this)">📊 <span class="tab-lbl">Dashboard</span></button>
-    <button class="nav-tab" onclick="switchTab('setup',this)">⚙️ <span class="tab-lbl">Setup</span></button>
+    <button class="nav-tab active" onclick="switchTab('entry',this)">📋 Feed</button>
+    <button class="nav-tab" onclick="switchTab('dashboard',this)">📊 View</button>
+    <button class="nav-tab" onclick="switchTab('setup',this)">⚙️ Setup</button>
   </nav>
 </header>
 
-<!-- ENTRY -->
+<!-- ENTRY TAB -->
 <div id="view-entry" class="view active">
-
   <div class="card">
-    <div class="card-title">📦 Container Header</div>
+    <div class="card-title">📦 Container Info</div>
     <div class="form-grid">
+      <div class="form-group">
+        <label>BL Number</label>
+        <input type="text" id="f-bl" placeholder="e.g. BL123456" inputmode="text">
+      </div>
+      <div class="form-group">
+        <label>Container No.</label>
+        <input type="text" id="f-container" placeholder="e.g. 104090-9" inputmode="text">
+      </div>
       <div class="form-group">
         <label>Supplier</label>
         <div class="sel-row">
@@ -276,223 +857,172 @@ pre .kw{color:var(--accent-dk)}pre .str{color:var(--warn)}pre .cmt{color:var(--m
         </div>
       </div>
       <div class="form-group">
-        <label>Product / Species</label>
-        <input type="text" id="f-product" placeholder="e.g. ECU 6×20" value="ECU 6×20" inputmode="text">
-      </div>
-      <div class="form-group">
-        <label>Country of Origin</label>
+        <label>Country</label>
         <div class="sel-row">
           <select id="f-country"></select>
           <button class="add-btn" onclick="openAddModal('country')">＋</button>
         </div>
       </div>
       <div class="form-group">
-        <label>Container No.</label>
-        <input type="text" id="f-container" placeholder="e.g. 104090-9" inputmode="text">
+        <label>Product / Species</label>
+        <input type="text" id="f-product" placeholder="e.g. ECU 6×20" inputmode="text">
       </div>
       <div class="form-group">
-        <label>Date</label>
-        <input type="text" id="f-date" readonly>
+        <label>Feeding Date</label>
+        <input type="date" id="f-date">
       </div>
       <div class="form-group">
         <label>Quality Code</label>
         <input type="text" id="f-quality" placeholder="e.g. N5V" inputmode="text">
       </div>
       <div class="form-group">
-        <label>Incharge</label>
-        <input type="text" id="f-incharge" placeholder="Name" inputmode="text">
+        <label>Incharge Name</label>
+        <input type="text" id="f-incharge" placeholder="Staff name" inputmode="text">
       </div>
     </div>
   </div>
 
-  <div class="stat-bands">
-    <div class="stat-band blue">
-      <div class="band-head">CBM 1 — LE1×G1×G2÷16M (m³)</div>
-      <div class="band-body">
-        <div class="band-cell"><div class="bc-lbl">Total CBM (m³)</div><div class="bc-val" id="s-cbm1">0.000</div></div>
-        <div class="band-cell"><div class="bc-lbl">Total CFT (ft³)</div><div class="bc-val" id="s-cft1">0.000</div></div>
-        <div class="band-cell"><div class="bc-lbl">Avg CBM (m³)</div><div class="bc-val" id="s-avg1">0.000</div></div>
-      </div>
+  <div class="stats-grid">
+    <div class="stat-chip">
+      <div class="stat-label">Total Pieces</div>
+      <div class="stat-value" id="s-pcs">0</div>
     </div>
-    <div class="stat-band green">
-      <div class="band-head">CBM 2 — L×G1×G2÷16M (m³)</div>
-      <div class="band-body">
-        <div class="band-cell"><div class="bc-lbl">Total CBM (m³)</div><div class="bc-val" id="s-cbm2">0.000</div></div>
-        <div class="band-cell"><div class="bc-lbl">Total CFT (ft³)</div><div class="bc-val" id="s-cft2">0.000</div></div>
-        <div class="band-cell"><div class="bc-lbl">Avg CBM (m³)</div><div class="bc-val" id="s-avg2">0.000</div></div>
-      </div>
+    <div class="stat-chip">
+      <div class="stat-label">Total CBM1</div>
+      <div class="stat-value" id="s-cbm1">0.000</div>
+    </div>
+    <div class="stat-chip">
+      <div class="stat-label">Total CBM2</div>
+      <div class="stat-value" id="s-cbm2">0.000</div>
+    </div>
+    <div class="stat-chip">
+      <div class="stat-label">Avg CBM1</div>
+      <div class="stat-value" id="s-avg">0.000</div>
     </div>
   </div>
 
-  <div class="stat-row">
-    <div class="stat-chip"><div class="bc-lbl">Pieces</div><div class="bc-val" id="s-pcs" style="color:var(--accent-dk)">0</div></div>
-    <div class="stat-chip"><div class="bc-lbl">Avg LE1 (cm)</div><div class="bc-val" id="s-avgle">—</div></div>
-    <div class="stat-chip"><div class="bc-lbl">Avg L (cm)</div><div class="bc-val" id="s-avgl">—</div></div>
-    <div class="stat-chip"><div class="bc-lbl">Avg G1 (cm)</div><div class="bc-val" id="s-avgg1">—</div></div>
-    <div class="stat-chip"><div class="bc-lbl">Avg G2 (cm)</div><div class="bc-val" id="s-avgg2">—</div></div>
+  <div class="card">
+    <div class="card-title">📝 Log Feeding (Vertical)</div>
+    <p style="color: var(--text-mute); font-size: 13px; margin-bottom: 14px;">👉 Enter measurements for each log below. Staff feeds top to bottom on phone.</p>
+    <div id="feed-list"></div>
   </div>
 
-  <div class="tbl-hint">← Scroll sideways to see all columns →</div>
-  <div class="table-wrap">
-    <table>
+  <div class="summary-scroll" style="display: none;" id="summary-container">
+    <table class="summary-table">
       <thead>
         <tr>
-          <th>Del</th>
-          <th>#</th>
+          <th>Log #</th>
           <th>LE1 (cm)</th>
           <th>L (cm)</th>
           <th>G1 (cm)</th>
           <th>G2 (cm)</th>
-          <th class="h-blue">CBM 1 (m³)</th>
-          <th class="h-green">CBM 2 (m³)</th>
+          <th>CBM1 (m³)</th>
+          <th>CBM2 (m³)</th>
         </tr>
       </thead>
-      <tbody id="log-tbody"></tbody>
-      <tfoot>
-        <tr>
-          <td colspan="2">TOTALS</td>
-          <td id="ft-avgle">—</td>
-          <td id="ft-avgl">—</td>
-          <td id="ft-avgg1">—</td>
-          <td id="ft-avgg2">—</td>
-          <td id="ft-tcbm1" class="c-blue2">—</td>
-          <td id="ft-tcbm2" class="c-green2">—</td>
-        </tr>
-      </tfoot>
+      <tbody id="summary-tbody"></tbody>
     </table>
   </div>
 
   <div class="btn-row">
-    <button class="btn btn-ghost" onclick="addLog()">➕ Add Log</button>
-    <button class="btn btn-ghost" onclick="addLogs(10)">➕ Add 10</button>
-    <button class="btn btn-danger" onclick="clearLogs()">🗑 Clear</button>
-    <button class="btn btn-primary" onclick="submitContainer()">✅ Submit</button>
+    <button class="btn btn-ghost" onclick="addFeed()">➕ Add Log</button>
+    <button class="btn btn-ghost" onclick="addFeeds(5)">➕ Add 5</button>
+    <button class="btn btn-danger btn-small" onclick="clearFeeds()">🗑 Clear</button>
+    <button class="btn btn-primary" style="margin-left: auto;" onclick="submitContainer()">✅ Save & Submit</button>
   </div>
 </div>
 
-<!-- DASHBOARD -->
+<!-- DASHBOARD TAB -->
 <div id="view-dashboard" class="view">
   <div class="page-title">📊 Dashboard</div>
+  
   <div class="filter-bar">
-    <input type="text" id="dash-search" placeholder="🔍 Search container / supplier…" oninput="renderDashboard()" inputmode="search">
-    <select id="dash-country" onchange="renderDashboard()"><option value="">All Countries</option></select>
-    <select id="dash-supplier" onchange="renderDashboard()"><option value="">All Suppliers</option></select>
+    <input type="text" id="dash-search" placeholder="🔍 Search BL / Container…" oninput="renderDashboard()" inputmode="search">
+    <select id="dash-bl" onchange="renderDashboard()">
+      <option value="">All BL Numbers</option>
+    </select>
+    <select id="dash-country" onchange="renderDashboard()">
+      <option value="">All Countries</option>
+    </select>
   </div>
+
   <div class="kpi-grid">
-    <div class="kpi-card km"><div class="kpi-lbl">Containers</div><div class="kpi-val" id="dt-n">0</div></div>
-    <div class="kpi-card kb"><div class="kpi-lbl">Total CBM 1 (m³)</div><div class="kpi-val" id="dt-cbm1">0.000</div></div>
-    <div class="kpi-card kb"><div class="kpi-lbl">Total CFT 1 (ft³)</div><div class="kpi-val" id="dt-cft1">0.000</div></div>
-    <div class="kpi-card kg"><div class="kpi-lbl">Total CBM 2 (m³)</div><div class="kpi-val" id="dt-cbm2">0.000</div></div>
-    <div class="kpi-card kg"><div class="kpi-lbl">Total CFT 2 (ft³)</div><div class="kpi-val" id="dt-cft2">0.000</div></div>
-    <div class="kpi-card km"><div class="kpi-lbl">Total Pcs</div><div class="kpi-val" id="dt-pcs">0</div></div>
+    <div class="kpi-card accent">
+      <div class="kpi-lbl">BL Count</div>
+      <div class="kpi-val" id="dt-bl">0</div>
+    </div>
+    <div class="kpi-card accent">
+      <div class="kpi-lbl">Containers</div>
+      <div class="kpi-val" id="dt-cont">0</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-lbl">Total Pieces</div>
+      <div class="kpi-val" id="dt-pcs">0</div>
+    </div>
   </div>
+
   <div id="dash-list"></div>
 </div>
 
-<!-- SETUP -->
+<!-- SETUP TAB -->
 <div id="view-setup" class="view">
   <div class="card">
-    <div class="card-title">🔗 Google Sheets</div>
-    <div class="form-group" style="margin-bottom:12px">
+    <div class="card-title">🔗 Google Sheets Setup</div>
+    <div class="form-group" style="margin-bottom: 12px;">
       <label>Apps Script Web App URL</label>
       <input type="text" id="gs-url" placeholder="https://script.google.com/macros/s/…/exec" oninput="saveConfig()" inputmode="url">
     </div>
-    <div id="gs-status" style="font-size:13px;color:var(--muted);margin-bottom:13px">⚠️ Not connected — paste your Apps Script URL above.</div>
+    <div id="gs-status" style="font-size: 13px; color: var(--text-mute); margin-bottom: 12px;">
+      ⚠️ Not connected
+    </div>
     <button class="btn btn-ghost" onclick="testConnection()">🔄 Test Connection</button>
   </div>
 
   <div class="card">
-    <div class="card-title">📋 Sheet Setup Guide</div>
-    <p style="color:var(--muted);font-size:13px;margin-bottom:18px;line-height:1.6">
-      Create a Google Sheet with tabs <strong style="color:var(--text)">LOG_DATA</strong> and <strong style="color:var(--text)">SUMMARY</strong>.
-      Go to <strong style="color:var(--text)">Extensions → Apps Script</strong>, paste the code, deploy as Web App (Execute as: Me · Access: Anyone).
+    <div class="card-title">📋 How to Set Up</div>
+    <ol style="font-size: 13px; color: var(--text-mute); line-height: 1.8; padding-left: 18px; margin-bottom: 12px;">
+      <li>Create a Google Sheet with two tabs: <strong>LOG_DATA</strong> and <strong>SUMMARY</strong></li>
+      <li>Go to <strong>Extensions → Apps Script</strong></li>
+      <li>Paste the script code (below)</li>
+      <li>Deploy as Web App (Execute as: Me, Access: Anyone)</li>
+      <li>Copy the Web App URL and paste above</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <div class="card-title">💾 Database Schema</div>
+    <p style="font-size: 12px; color: var(--text-mute); margin-bottom: 10px;"><strong>LOG_DATA Headers:</strong></p>
+    <p style="font-size: 12px; background: var(--bg); padding: 10px; border-radius: 6px; margin-bottom: 14px; font-family: 'IBM Plex Mono', monospace; color: var(--accent-dk);">
+      BLNo | ContainerNo | Supplier | Product | Country | Date | Quality | Incharge | LogNo | LE1 | L | G1 | G2 | CBM1 | CBM2
     </p>
-    <div class="gs-step">
-      <div class="gs-num">1</div>
-      <div class="gs-content">
-        <h4>LOG_DATA — Row 1 headers</h4>
-        <p><code>ContainerNo</code> <code>Supplier</code> <code>Product</code> <code>Country</code> <code>Date</code> <code>Quality</code> <code>Incharge</code> <code>LogNo</code> <code>LE1</code> <code>L</code> <code>G1</code> <code>G2</code> <code>CBM1</code> <code>CBM2</code></p>
-      </div>
-    </div>
-    <div class="gs-step">
-      <div class="gs-num">2</div>
-      <div class="gs-content">
-        <h4>SUMMARY — Row 1 headers</h4>
-        <p><code>ContainerNo</code> <code>Supplier</code> <code>Product</code> <code>Country</code> <code>Date</code> <code>Quality</code> <code>Pcs</code> <code>TotalCBM1</code> <code>TotalCFT1</code> <code>AvgCBM1</code> <code>TotalCBM2</code> <code>TotalCFT2</code> <code>AvgCBM2</code></p>
-      </div>
-    </div>
-    <div class="gs-step">
-      <div class="gs-num">3</div>
-      <div class="gs-content">
-        <h4>Apps Script Code</h4>
-        <pre id="apps-script-code"><span class="cmt">// TimberTrack — paste in Apps Script, deploy as Web App</span>
-<span class="kw">const</span> SS_ID = <span class="str">'YOUR_SPREADSHEET_ID'</span>;
-
-<span class="kw">function</span> doPost(e) {
-  <span class="kw">const</span> lock = LockService.getScriptLock();
-  lock.tryLock(10000);
-  <span class="kw">try</span> {
-    <span class="kw">const</span> data = JSON.parse(e.postData.contents);
-    <span class="kw">const</span> ss = SpreadsheetApp.openById(SS_ID);
-    <span class="kw">const</span> logSh = ss.getSheetByName(<span class="str">'LOG_DATA'</span>);
-    <span class="kw">const</span> sumSh = ss.getSheetByName(<span class="str">'SUMMARY'</span>);
-    <span class="kw">const</span> h = data.header;
-    data.logs.forEach(r =&gt; logSh.appendRow([
-      h.container,h.supplier,h.product,h.country,h.date,h.quality,h.incharge,
-      r.no,r.le1,r.l,r.g1,r.g2,r.cbm1,r.cbm2
-    ]));
-    <span class="kw">const</span> s = data.summary;
-    <span class="kw">const</span> row = [h.container,h.supplier,h.product,h.country,h.date,h.quality,
-      s.pcs,s.totalCbm1,s.totalCft1,s.avgCbm1,s.totalCbm2,s.totalCft2,s.avgCbm2];
-    <span class="kw">const</span> ex = findRow(sumSh, h.container);
-    <span class="kw">if</span> (ex &gt; 0) sumSh.getRange(ex,1,1,row.length).setValues([row]);
-    <span class="kw">else</span> sumSh.appendRow(row);
-    <span class="kw">return</span> ContentService.createTextOutput(JSON.stringify({status:<span class="str">'ok'</span>}))
-      .setMimeType(ContentService.MimeType.JSON);
-  } <span class="kw">finally</span> { lock.releaseLock(); }
-}
-
-<span class="kw">function</span> doGet() {
-  <span class="kw">const</span> rows = SpreadsheetApp.openById(SS_ID)
-    .getSheetByName(<span class="str">'SUMMARY'</span>).getDataRange().getValues();
-  <span class="kw">const</span> hd = rows[0];
-  <span class="kw">return</span> ContentService.createTextOutput(JSON.stringify({
-    status:<span class="str">'ok'</span>,
-    data: rows.slice(1).map(r =&gt; Object.fromEntries(hd.map((k,i)=&gt;[k,r[i]])))
-  })).setMimeType(ContentService.MimeType.JSON);
-}
-
-<span class="kw">function</span> findRow(sh, id) {
-  <span class="kw">const</span> v = sh.getRange(1,1,sh.getLastRow(),1).getValues();
-  <span class="kw">for</span> (<span class="kw">let</span> i=1; i&lt;v.length; i++) <span class="kw">if</span>(v[i][0]==id) <span class="kw">return</span> i+1;
-  <span class="kw">return</span> -1;
-}</pre>
-        <button class="btn btn-ghost" style="margin-top:9px" onclick="copyScript()">📋 Copy Script</button>
-      </div>
-    </div>
+    
+    <p style="font-size: 12px; color: var(--text-mute); margin-bottom: 10px;"><strong>SUMMARY Headers:</strong></p>
+    <p style="font-size: 12px; background: var(--bg); padding: 10px; border-radius: 6px; font-family: 'IBM Plex Mono', monospace; color: var(--accent-dk);">
+      BLNo | ContainerNo | Supplier | Product | Country | Date | Quality | Pcs | TotalCBM1 | TotalCBM2 | AvgCBM1 | AvgCBM2
+    </p>
   </div>
 </div>
 
 <!-- ADD MODAL -->
-<div class="mini-modal" id="add-modal">
-  <div class="mini-box">
-    <h4 id="add-modal-title">Add Supplier</h4>
-    <input type="text" id="add-modal-input" placeholder="Enter name…" inputmode="text" onkeydown="if(event.key==='Enter')confirmAdd()">
-    <div class="mini-row">
-      <button class="btn btn-primary" style="justify-content:center" onclick="confirmAdd()">Add</button>
-      <button class="btn btn-ghost" style="justify-content:center" onclick="closeAddModal()">Cancel</button>
+<div class="modal-overlay" id="add-modal">
+  <div class="modal-box">
+    <div class="modal-title" id="add-modal-title">Add Supplier</div>
+    <input class="modal-input" type="text" id="add-modal-input" placeholder="Enter name…" inputmode="text" onkeydown="if(event.key==='Enter')confirmAdd()">
+    <div class="modal-btns">
+      <button class="btn btn-primary" onclick="confirmAdd()">Add</button>
+      <button class="btn btn-ghost" onclick="closeAddModal()">Cancel</button>
     </div>
   </div>
 </div>
 
 <!-- SUBMIT MODAL -->
 <div class="modal-overlay" id="submit-modal">
-  <div class="modal">
-    <h3>✅ Submit Container</h3>
-    <p id="modal-msg">Confirm…</p>
+  <div class="modal-box">
+    <div class="modal-title">✅ Save Container Data</div>
+    <div class="modal-msg" id="modal-msg">Confirm submission…</div>
     <div class="modal-btns">
-      <button class="btn btn-primary" style="justify-content:center" onclick="confirmSubmit()">Confirm &amp; Send</button>
-      <button class="btn btn-ghost" style="justify-content:center" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmSubmit()">Confirm</button>
+      <button class="btn btn-ghost" onclick="closeSubmitModal()">Cancel</button>
     </div>
   </div>
 </div>
@@ -500,344 +1030,441 @@ pre .kw{color:var(--accent-dk)}pre .str{color:var(--warn)}pre .cmt{color:var(--m
 <div class="toast-wrap" id="toast-wrap"></div>
 
 <script>
-let logs = [], logCounter = 0;
+let feeds = [], feedCounter = 0;
 let containers = JSON.parse(localStorage.getItem('tt_containers') || '[]');
-let config     = JSON.parse(localStorage.getItem('tt_config')     || '{}');
-let suppliers  = JSON.parse(localStorage.getItem('tt_suppliers')  || '["SAWING","TROPICAL TIMBER CO.","AMAZON LOGS LTD.","PACIFIC HARDWOOD","CEDAR VALLEY EXPORTS"]');
-let countries  = JSON.parse(localStorage.getItem('tt_countries')  || '["Ecuador","Brazil","Indonesia","Malaysia","Myanmar","Cameroon","Gabon","Congo"]');
-let addTarget  = '';
+let config = JSON.parse(localStorage.getItem('tt_config') || '{}');
+let suppliers = JSON.parse(localStorage.getItem('tt_suppliers') || '["SAWING","TROPICAL TIMBER","AMAZON LOGS","PACIFIC HARDWOOD","CEDAR EXPORTS"]');
+let countries = JSON.parse(localStorage.getItem('tt_countries') || '["Ecuador","Brazil","Indonesia","Malaysia","Myanmar","Cameroon","Gabon"]');
+let addTarget = '';
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('f-date').value = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('f-date').value = today;
   renderDropdowns();
   if (config.gsUrl) document.getElementById('gs-url').value = config.gsUrl;
-  addLog(); // Start with one empty log instead of 5
+  addFeed();
   renderDashboard();
 });
 
 function renderDropdowns() {
-  const sSel=document.getElementById('f-supplier'), cSel=document.getElementById('f-country');
-  const sv=sSel.value, cv=cSel.value;
-  sSel.innerHTML='<option value="">— Select Supplier —</option>'+suppliers.map(s=>`<option>${s}</option>`).join('');
-  cSel.innerHTML='<option value="">— Select Country —</option>'+countries.map(c=>`<option>${c}</option>`).join('');
-  if(sv) sSel.value=sv; if(cv) cSel.value=cv;
-  const ds=document.getElementById('dash-supplier'), dc=document.getElementById('dash-country');
-  if(ds){const v=ds.value;ds.innerHTML='<option value="">All Suppliers</option>'+suppliers.map(s=>`<option>${s}</option>`).join('');ds.value=v;}
-  if(dc){const v=dc.value;dc.innerHTML='<option value="">All Countries</option>'+countries.map(c=>`<option>${c}</option>`).join('');dc.value=v;}
+  const sSel = document.getElementById('f-supplier');
+  const cSel = document.getElementById('f-country');
+  const sv = sSel.value;
+  const cv = cSel.value;
+  
+  sSel.innerHTML = '<option value="">Select Supplier</option>' + suppliers.map(s => `<option>${s}</option>`).join('');
+  cSel.innerHTML = '<option value="">Select Country</option>' + countries.map(c => `<option>${c}</option>`).join('');
+  
+  if (sv) sSel.value = sv;
+  if (cv) cSel.value = cv;
+  
+  const dbl = document.getElementById('dash-bl');
+  const dco = document.getElementById('dash-country');
+  
+  if (dbl) {
+    const blOptions = [...new Set(containers.map(c => c.header.bl).filter(Boolean))].sort();
+    const v = dbl.value;
+    dbl.innerHTML = '<option value="">All BL Numbers</option>' + blOptions.map(b => `<option>${b}</option>`).join('');
+    dbl.value = v;
+  }
+  
+  if (dco) {
+    const v = dco.value;
+    dco.innerHTML = '<option value="">All Countries</option>' + countries.map(c => `<option>${c}</option>`).join('');
+    dco.value = v;
+  }
 }
 
-function openAddModal(type){
-  addTarget=type;
-  document.getElementById('add-modal-title').textContent=type==='supplier'?'Add New Supplier':'Add New Country';
-  document.getElementById('add-modal-input').value='';
+function openAddModal(type) {
+  addTarget = type;
+  document.getElementById('add-modal-title').textContent = type === 'supplier' ? 'Add New Supplier' : 'Add New Country';
+  document.getElementById('add-modal-input').value = '';
   document.getElementById('add-modal').classList.add('open');
-  setTimeout(()=>document.getElementById('add-modal-input').focus(),100);
+  setTimeout(() => document.getElementById('add-modal-input').focus(), 100);
 }
-function closeAddModal(){document.getElementById('add-modal').classList.remove('open');}
-function confirmAdd(){
-  const val=document.getElementById('add-modal-input').value.trim();
-  if(!val){toast('Enter a name','error');return;}
-  if(addTarget==='supplier'){
-    if(!suppliers.includes(val)){suppliers.push(val);localStorage.setItem('tt_suppliers',JSON.stringify(suppliers));}
-    renderDropdowns();document.getElementById('f-supplier').value=val;
-    toast(`Supplier "${val}" added`,'success');
-  } else {
-    if(!countries.includes(val)){countries.push(val);localStorage.setItem('tt_countries',JSON.stringify(countries));}
-    renderDropdowns();document.getElementById('f-country').value=val;
-    toast(`Country "${val}" added`,'success');
+
+function closeAddModal() {
+  document.getElementById('add-modal').classList.remove('open');
+}
+
+function confirmAdd() {
+  const val = document.getElementById('add-modal-input').value.trim();
+  if (!val) {
+    toast('Enter a name', 'error');
+    return;
   }
+  
+  if (addTarget === 'supplier') {
+    if (!suppliers.includes(val)) {
+      suppliers.push(val);
+      localStorage.setItem('tt_suppliers', JSON.stringify(suppliers));
+    }
+    renderDropdowns();
+    document.getElementById('f-supplier').value = val;
+    toast(`Supplier added ✓`, 'success');
+  } else {
+    if (!countries.includes(val)) {
+      countries.push(val);
+      localStorage.setItem('tt_countries', JSON.stringify(countries));
+    }
+    renderDropdowns();
+    document.getElementById('f-country').value = val;
+    toast(`Country added ✓`, 'success');
+  }
+  
   closeAddModal();
 }
 
-function switchTab(name,btn){
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
-  document.getElementById('view-'+name).classList.add('active');
+function switchTab(name, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
   btn.classList.add('active');
-  if(name==='dashboard') renderDashboard();
+  if (name === 'dashboard') renderDashboard();
 }
 
-function calcLog(log){
-  const le1=parseFloat(log.le1)||0, l=parseFloat(log.l)||0;
-  const g1=parseFloat(log.g1)||0,  g2=parseFloat(log.g2)||0;
-  const cbm1=(le1&&g1&&g2)?parseFloat(((le1*g1*g2)/16000000).toFixed(3)):0;
-  const cbm2=(l&&g1&&g2)?parseFloat(((l*g1*g2)/16000000).toFixed(3)):0;
-  return{cbm1,cbm2,g1,g2,le1,l};
+function calcLog(log) {
+  const le1 = parseFloat(log.le1) || 0;
+  const l = parseFloat(log.l) || 0;
+  const g1 = parseFloat(log.g1) || 0;
+  const g2 = parseFloat(log.g2) || 0;
+  const cbm1 = (le1 && g1 && g2) ? parseFloat(((le1 * g1 * g2) / 16000000).toFixed(4)) : 0;
+  const cbm2 = (l && g1 && g2) ? parseFloat(((l * g1 * g2) / 16000000).toFixed(4)) : 0;
+  return { cbm1, cbm2, le1, l, g1, g2 };
 }
 
-// Build stepper HTML — triggers numeric keypad on mobile, no browser spinners
-function mkStepper(lid, field, val, ph, step, min){
-  step=step||1; min=min||0;
-  return `<div class="stepper" id="sp-${lid}-${field}">
-    <button class="stp-btn" onclick="stepVal(${lid},'${field}',-${step},${min})" ontouchstart="">−</button>
-    <div class="stp-div"></div>
-    <input class="stp-inp" type="number" inputmode="numeric" pattern="[0-9]*"
-      value="${val}" placeholder="" min="${min}" step="${step}"
-      id="si-${lid}-${field}"
-      onchange="onInput(${lid},'${field}',this.value)"
-      oninput="onInput(${lid},'${field}',this.value)"
-      onfocus="this.closest('.stepper').classList.add('focused')"
-      onblur="this.closest('.stepper').classList.remove('focused')">
-    <div class="stp-div"></div>
-    <button class="stp-btn" onclick="stepVal(${lid},'${field}',${step},${min})" ontouchstart="">＋</button>
-  </div>`;
+function renderFeedCard(log, idx) {
+  const { cbm1, cbm2, le1, l, g1, g2 } = calcLog(log);
+  const warn = (g1 > 0 && g1 < 35) || (g2 > 0 && g2 < 35);
+  
+  return `
+    <div class="feed-card${warn ? ' warn-card' : ''}">
+      <div class="feed-header">
+        <div class="feed-num">Log #${idx + 1}</div>
+        <button class="feed-del" onclick="deleteFeed(${log.id})" title="Delete">✕</button>
+      </div>
+      <div class="feed-grid">
+        <div class="feed-input-group">
+          <div class="feed-label">LE1 (cm)</div>
+          <input class="feed-input${warn ? ' feed-warn' : ''}" type="number" inputmode="numeric" placeholder="260" value="${log.le1}" 
+            onchange="onFeedInput(${log.id},'le1',this.value)" oninput="onFeedInput(${log.id},'le1',this.value)">
+        </div>
+        <div class="feed-input-group">
+          <div class="feed-label">L (cm)</div>
+          <input class="feed-input${warn ? ' feed-warn' : ''}" type="number" inputmode="numeric" placeholder="260" value="${log.l}" 
+            onchange="onFeedInput(${log.id},'l',this.value)" oninput="onFeedInput(${log.id},'l',this.value)">
+        </div>
+        <div class="feed-input-group">
+          <div class="feed-label">G1 (cm)</div>
+          <input class="feed-input${warn ? ' feed-warn' : ''}" type="number" inputmode="numeric" placeholder="70" value="${log.g1}" 
+            onchange="onFeedInput(${log.id},'g1',this.value)" oninput="onFeedInput(${log.id},'g1',this.value)">
+        </div>
+        <div class="feed-input-group">
+          <div class="feed-label">G2 (cm)</div>
+          <input class="feed-input${warn ? ' feed-warn' : ''}" type="number" inputmode="numeric" placeholder="70" value="${log.g2}" 
+            onchange="onFeedInput(${log.id},'g2',this.value)" oninput="onFeedInput(${log.id},'g2',this.value)">
+        </div>
+      </div>
+      <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--bg); display: flex; gap: 8px; font-size: 12px; justify-content: space-around;">
+        <div><strong>CBM1:</strong> <span class="td-cbm">${cbm1 > 0 ? cbm1.toFixed(4) : '—'}</span></div>
+        <div><strong>CBM2:</strong> <span class="td-cbm">${cbm2 > 0 ? cbm2.toFixed(4) : '—'}</span></div>
+      </div>
+      ${warn ? '<div style="margin-top: 8px; font-size: 11px; color: var(--warn); font-weight: 700;">⚠️ Low measurement (G < 35cm)</div>' : ''}
+    </div>
+  `;
 }
 
-function stepVal(id, field, delta, min){
-  const log=logs.find(l=>l.id===id); if(!log) return;
-  let v=(parseFloat(log[field])||0)+delta;
-  if(v<min) v=min;
-  log[field]=v;
-  const inp=document.getElementById(`si-${id}-${field}`);
-  if(inp) inp.value=v;
-  recalcDisplay();
+function addFeed() {
+  feedCounter++;
+  feeds.push({ id: feedCounter, le1: '', l: '', g1: '', g2: '' });
+  renderFeeds();
+  setTimeout(() => {
+    document.getElementById('feed-list').lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 50);
+}
+
+function addFeeds(n) {
+  for (let i = 0; i < n; i++) addFeed();
+}
+
+function deleteFeed(id) {
+  feeds = feeds.filter(f => f.id !== id);
+  renderFeeds();
+}
+
+function clearFeeds() {
+  if (!confirm('Clear all logs? This cannot be undone.')) return;
+  feeds = [];
+  feedCounter = 0;
+  renderFeeds();
+}
+
+function onFeedInput(id, field, val) {
+  const feed = feeds.find(f => f.id === id);
+  if (feed) {
+    feed[field] = val;
+    updateStats();
+  }
+}
+
+function renderFeeds() {
+  document.getElementById('feed-list').innerHTML = feeds.map((f, i) => renderFeedCard(f, i)).join('');
   updateStats();
 }
 
-function addLog(){logCounter++;logs.push({id:logCounter,le1:'',l:'',g1:'',g2:''});renderTable();document.getElementById('log-tbody').lastElementChild?.scrollIntoView({behavior:'smooth',block:'nearest'});}
-function addLogs(n){for(let i=0;i<n;i++) addLog();}
-function deleteLog(id){logs=logs.filter(l=>l.id!==id);renderTable();}
-function clearLogs(){if(!confirm('Clear all logs?')) return;logs=[];logCounter=0;renderTable();}
-
-function onInput(id, field, val){
-  const log=logs.find(l=>l.id===id);
-  if(log) log[field]=val;
-  recalcDisplay();
-  updateStats();
-}
-
-// Recalculate only the computed columns — avoids destroying stepper DOM/focus
-function recalcDisplay(){
-  let sumLe1=0,sumL=0,sumG1=0,sumG2=0,vN=0,run1=0,run2=0;
-  const tbody=document.getElementById('log-tbody');
-  logs.forEach((log,idx)=>{
-    const{cbm1,cbm2,g1,g2,le1,l}=calcLog(log);
-    run1=parseFloat((run1+cbm1).toFixed(3));
-    run2=parseFloat((run2+cbm2).toFixed(3));
-    if(g1>0||g2>0){sumLe1+=le1;sumL+=l;sumG1+=g1;sumG2+=g2;vN++;}
-    const row=tbody.rows[idx]; if(!row) return;
-    const warn=(g1>0&&g1<35)||(g2>0&&g2<35);
-    row.classList.toggle('warn-row',warn);
-    row.cells[6].textContent=cbm1>0?cbm1.toFixed(3):'—';
-    row.cells[7].textContent=cbm2>0?cbm2.toFixed(3):'—';
+function updateStats() {
+  let totalCbm1 = 0, totalCbm2 = 0, validCount = 0;
+  
+  feeds.forEach(feed => {
+    const { cbm1, cbm2, g1, g2 } = calcLog(feed);
+    totalCbm1 += cbm1;
+    totalCbm2 += cbm2;
+    if (g1 > 0 && g2 > 0) validCount++;
   });
-  const n=vN||1;
-  document.getElementById('ft-avgle').textContent=vN?(sumLe1/n).toFixed(1):'—';
-  document.getElementById('ft-avgl').textContent=vN?(sumL/n).toFixed(1):'—';
-  document.getElementById('ft-avgg1').textContent=vN?(sumG1/n).toFixed(1):'—';
-  document.getElementById('ft-avgg2').textContent=vN?(sumG2/n).toFixed(1):'—';
-  document.getElementById('ft-tcbm1').textContent=run1>0?run1.toFixed(3):'—';
-  document.getElementById('ft-tcbm2').textContent=run2>0?run2.toFixed(3):'—';
+  
+  const count = validCount || 1;
+  document.getElementById('s-pcs').textContent = feeds.length;
+  document.getElementById('s-cbm1').textContent = totalCbm1.toFixed(3);
+  document.getElementById('s-cbm2').textContent = totalCbm2.toFixed(3);
+  document.getElementById('s-avg').textContent = (totalCbm1 / count).toFixed(4);
 }
 
-function updateStats(){
-  let run1=0,run2=0,sumLe1=0,sumL=0,sumG1=0,sumG2=0,vN=0;
-  logs.forEach(log=>{
-    const c=calcLog(log);
-    run1=parseFloat((run1+c.cbm1).toFixed(3));
-    run2=parseFloat((run2+c.cbm2).toFixed(3));
-    if(c.g1>0||c.g2>0){sumLe1+=c.le1;sumL+=c.l;sumG1+=c.g1;sumG2+=c.g2;vN++;}
-  });
-  const filled=logs.filter(l=>parseFloat(l.g1)>0||parseFloat(l.g2)>0).length||1;
-  const n=vN||1;
-  document.getElementById('s-cbm1').textContent=run1.toFixed(3);
-  document.getElementById('s-cft1').textContent=(run1*35.315).toFixed(3);
-  document.getElementById('s-avg1').textContent=(run1/filled).toFixed(3);
-  document.getElementById('s-cbm2').textContent=run2.toFixed(3);
-  document.getElementById('s-cft2').textContent=(run2*35.315).toFixed(3);
-  document.getElementById('s-avg2').textContent=(run2/filled).toFixed(3);
-  document.getElementById('s-pcs').textContent=logs.length;
-  document.getElementById('s-avgle').textContent=vN?(sumLe1/n).toFixed(1):'—';
-  document.getElementById('s-avgl').textContent=vN?(sumL/n).toFixed(1):'—';
-  document.getElementById('s-avgg1').textContent=vN?(sumG1/n).toFixed(1):'—';
-  document.getElementById('s-avgg2').textContent=vN?(sumG2/n).toFixed(1):'—';
-}
-
-function renderTable(){
-  let run1=0,run2=0,sumLe1=0,sumL=0,sumG1=0,sumG2=0,vN=0;
-  const rows=logs.map((log,idx)=>{
-    const{cbm1,cbm2,g1,g2,le1,l}=calcLog(log);
-    run1=parseFloat((run1+cbm1).toFixed(3));
-    run2=parseFloat((run2+cbm2).toFixed(3));
-    if(g1>0||g2>0){sumLe1+=le1;sumL+=l;sumG1+=g1;sumG2+=g2;vN++;}
-    const warn=(g1>0&&g1<35)||(g2>0&&g2<35);
-    return `<tr${warn?' class="warn-row"':''}>
-      <td><button class="del-btn" onclick="deleteLog(${log.id})">✕</button></td>
-      <td>#${idx+1}${warn?'<span class="warn-badge">LOW</span>':''}</td>
-      <td data-label="LE1 (cm)">${mkStepper(log.id,'le1',log.le1,'260')}</td>
-      <td data-label="L (cm)">${mkStepper(log.id,'l',log.l,'260')}</td>
-      <td data-label="G1 (cm)">${mkStepper(log.id,'g1',log.g1,'70')}</td>
-      <td data-label="G2 (cm)">${mkStepper(log.id,'g2',log.g2,'70')}</td>
-      <td data-label="CBM 1 (m³)" class="c-blue">${cbm1>0?cbm1.toFixed(3):'—'}</td>
-      <td data-label="CBM 2 (m³)" class="c-green">${cbm2>0?cbm2.toFixed(3):'—'}</td>
-    </tr>`;
-  });
-  document.getElementById('log-tbody').innerHTML=rows.join('');
-  const n=vN||1;
-  document.getElementById('ft-avgle').textContent=vN?(sumLe1/n).toFixed(1):'—';
-  document.getElementById('ft-avgl').textContent=vN?(sumL/n).toFixed(1):'—';
-  document.getElementById('ft-avgg1').textContent=vN?(sumG1/n).toFixed(1):'—';
-  document.getElementById('ft-avgg2').textContent=vN?(sumG2/n).toFixed(1):'—';
-  document.getElementById('ft-tcbm1').textContent=run1>0?run1.toFixed(3):'—';
-  document.getElementById('ft-tcbm2').textContent=run2>0?run2.toFixed(3):'—';
-  updateStats();
-}
-
-function submitContainer(){
-  const container=document.getElementById('f-container').value.trim();
-  const supplier=document.getElementById('f-supplier').value;
-  if(!container){toast('Enter container number','error');return;}
-  if(!supplier){toast('Select a supplier','error');return;}
-  const valid=logs.filter(l=>parseFloat(l.g1)>0&&parseFloat(l.g2)>0);
-  if(!valid.length){toast('Fill in log measurements','error');return;}
-  document.getElementById('modal-msg').innerHTML=`Submit <strong>${valid.length} logs</strong> for container <strong>${container}</strong>?`;
+function submitContainer() {
+  const bl = document.getElementById('f-bl').value.trim();
+  const container = document.getElementById('f-container').value.trim();
+  const supplier = document.getElementById('f-supplier').value;
+  
+  if (!bl) {
+    toast('Enter BL Number', 'error');
+    return;
+  }
+  if (!container) {
+    toast('Enter Container No.', 'error');
+    return;
+  }
+  if (!supplier) {
+    toast('Select Supplier', 'error');
+    return;
+  }
+  
+  const valid = feeds.filter(f => parseFloat(f.g1) > 0 && parseFloat(f.g2) > 0);
+  if (!valid.length) {
+    toast('Fill in log measurements', 'error');
+    return;
+  }
+  
+  document.getElementById('modal-msg').innerHTML = 
+    `<strong>${valid.length} logs</strong> for <strong>${container}</strong> (BL: ${bl})?`;
   document.getElementById('submit-modal').classList.add('open');
 }
-function closeModal(){document.getElementById('submit-modal').classList.remove('open');}
 
-async function confirmSubmit(){
-  closeModal();
-  const header={
-    container:document.getElementById('f-container').value.trim(),
-    supplier:document.getElementById('f-supplier').value,
-    product:document.getElementById('f-product').value,
-    country:document.getElementById('f-country').value,
-    date:document.getElementById('f-date').value,
-    quality:document.getElementById('f-quality').value,
-    incharge:document.getElementById('f-incharge').value,
+function closeSubmitModal() {
+  document.getElementById('submit-modal').classList.remove('open');
+}
+
+async function confirmSubmit() {
+  closeSubmitModal();
+  
+  const header = {
+    bl: document.getElementById('f-bl').value.trim(),
+    container: document.getElementById('f-container').value.trim(),
+    supplier: document.getElementById('f-supplier').value,
+    product: document.getElementById('f-product').value,
+    country: document.getElementById('f-country').value,
+    date: document.getElementById('f-date').value,
+    quality: document.getElementById('f-quality').value,
+    incharge: document.getElementById('f-incharge').value,
   };
-  let run1=0,run2=0,sumG1=0,sumG2=0,sumLe1=0,sumL=0,vN=0;
-  const logRows=[];
-  logs.forEach((log,idx)=>{
-    const{cbm1,cbm2,g1,g2,le1,l}=calcLog(log);
-    run1=parseFloat((run1+cbm1).toFixed(3));
-    run2=parseFloat((run2+cbm2).toFixed(3));
-    if(g1>0||g2>0){sumG1+=g1;sumG2+=g2;sumLe1+=le1;sumL+=l;vN++;}
-    logRows.push({no:idx+1,le1:log.le1,l:log.l,g1:log.g1,g2:log.g2,
-      cbm1:cbm1.toFixed(3),cbm2:cbm2.toFixed(3)});
+  
+  let totalCbm1 = 0, totalCbm2 = 0, validCount = 0;
+  const logRows = [];
+  
+  feeds.forEach((feed, idx) => {
+    const { cbm1, cbm2, g1, g2 } = calcLog(feed);
+    totalCbm1 += cbm1;
+    totalCbm2 += cbm2;
+    if (g1 > 0 && g2 > 0) validCount++;
+    
+    logRows.push({
+      no: idx + 1,
+      le1: feed.le1,
+      l: feed.l,
+      g1: feed.g1,
+      g2: feed.g2,
+      cbm1: cbm1.toFixed(4),
+      cbm2: cbm2.toFixed(4)
+    });
   });
-  const n=vN||1;
-  const payload={header,logs:logRows,summary:{
-    pcs:logs.length,
-    totalCbm1:run1.toFixed(3),totalCft1:(run1*35.315).toFixed(3),avgCbm1:(run1/n).toFixed(3),
-    totalCbm2:run2.toFixed(3),totalCft2:(run2*35.315).toFixed(3),avgCbm2:(run2/n).toFixed(3),
-    avgG1:(sumG1/n).toFixed(2),avgG2:(sumG2/n).toFixed(2),
-  }};
-  const ex=containers.findIndex(c=>c.header.container===header.container);
-  if(ex>=0) containers[ex]=payload; else containers.push(payload);
-  localStorage.setItem('tt_containers',JSON.stringify(containers));
-  const gsUrl=document.getElementById('gs-url').value.trim();
-  if(gsUrl){
-    toast('Sending to Google Sheets…','info');
-    try{await fetch(gsUrl,{method:'POST',body:JSON.stringify(payload)});toast('✅ Sent to Google Sheets!','success');}
-    catch{toast('⚠️ Saved locally — Sheets sync failed','error');}
-  } else toast('✅ Saved locally (add Sheets URL in Setup)','success');
+  
+  const count = validCount || 1;
+  const payload = {
+    header,
+    logs: logRows,
+    summary: {
+      pcs: feeds.length,
+      totalCbm1: totalCbm1.toFixed(4),
+      totalCbm2: totalCbm2.toFixed(4),
+      avgCbm1: (totalCbm1 / count).toFixed(4),
+      avgCbm2: (totalCbm2 / count).toFixed(4),
+    }
+  };
+  
+  const ex = containers.findIndex(c => c.header.container === header.container && c.header.date === header.date);
+  if (ex >= 0) {
+    containers[ex] = payload;
+  } else {
+    containers.push(payload);
+  }
+  
+  localStorage.setItem('tt_containers', JSON.stringify(containers));
+  
+  const gsUrl = document.getElementById('gs-url').value.trim();
+  if (gsUrl) {
+    toast('📤 Sending to Sheets…', 'success');
+    try {
+      await fetch(gsUrl, { method: 'POST', body: JSON.stringify(payload) });
+      toast('✅ Saved & Sent!', 'success');
+    } catch {
+      toast('⚠️ Saved locally (Sheets sync failed)', 'error');
+    }
+  } else {
+    toast('✅ Saved locally', 'success');
+  }
+  
+  document.getElementById('f-bl').value = '';
+  document.getElementById('f-container').value = '';
+  document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
+  feeds = [];
+  feedCounter = 0;
+  renderFeeds();
   renderDashboard();
 }
 
-function renderDashboard(){
+function renderDashboard() {
   renderDropdowns();
-  const search=(document.getElementById('dash-search')?.value||'').toLowerCase();
-  const country=document.getElementById('dash-country')?.value||'';
-  const supplier=document.getElementById('dash-supplier')?.value||'';
-  const f=containers.filter(c=>{
-    const h=c.header;
-    if(search&&!h.container.toLowerCase().includes(search)&&!h.supplier.toLowerCase().includes(search)&&!h.country.toLowerCase().includes(search)) return false;
-    if(country&&h.country!==country) return false;
-    if(supplier&&h.supplier!==supplier) return false;
+  
+  const search = (document.getElementById('dash-search')?.value || '').toLowerCase();
+  const blFilter = document.getElementById('dash-bl')?.value || '';
+  const countryFilter = document.getElementById('dash-country')?.value || '';
+  
+  const blMap = {};
+  const filtered = containers.filter(c => {
+    const h = c.header;
+    if (search && !h.bl.toLowerCase().includes(search) && !h.container.toLowerCase().includes(search)) return false;
+    if (blFilter && h.bl !== blFilter) return false;
+    if (countryFilter && h.country !== countryFilter) return false;
+    
+    if (!blMap[h.bl]) blMap[h.bl] = [];
+    blMap[h.bl].push(c);
     return true;
   });
-  const tc1=f.reduce((s,c)=>s+parseFloat(c.summary.totalCbm1||0),0);
-  const tc2=f.reduce((s,c)=>s+parseFloat(c.summary.totalCbm2||0),0);
-  const tp=f.reduce((s,c)=>s+c.summary.pcs,0);
-  document.getElementById('dt-n').textContent=f.length;
-  document.getElementById('dt-cbm1').textContent=tc1.toFixed(3);
-  document.getElementById('dt-cft1').textContent=(tc1*35.315).toFixed(3);
-  document.getElementById('dt-cbm2').textContent=tc2.toFixed(3);
-  document.getElementById('dt-cft2').textContent=(tc2*35.315).toFixed(3);
-  document.getElementById('dt-pcs').textContent=tp;
-  const list=document.getElementById('dash-list');
-  if(!f.length){list.innerHTML=`<div class="empty"><div>🪵</div><p>No containers yet.<br>Submit your first in Entry.</p></div>`;return;}
-  list.innerHTML=f.map(c=>`
-    <div class="cont-card" onclick="loadContainer('${c.header.container}')">
-      <div class="cont-head">
-        <span class="cont-id">${c.header.container}</span>
-        <span class="cont-meta">${c.header.supplier} · ${c.header.country} · ${c.header.date}</span>
-        <button class="btn-excel" onclick="event.stopPropagation();downloadExcel('${c.header.container}')">📥 Excel</button>
-      </div>
-      <div class="pill-row">
-        <span class="pill n">${c.header.product||'—'}</span>
-        <span class="pill n">${c.summary.pcs} pcs</span>
-        <span class="pill b">CBM1 ${c.summary.totalCbm1}</span>
-        <span class="pill b">CFT1 ${c.summary.totalCft1}</span>
-        <span class="pill g">CBM2 ${c.summary.totalCbm2}</span>
-        <span class="pill g">CFT2 ${c.summary.totalCft2}</span>
-      </div>
-    </div>`).join('');
-}
-
-function downloadExcel(id){
-  const c=containers.find(c=>c.header.container===id); if(!c) return;
-  let csv="Container Header\n";
-  csv+="Container ID,Supplier,Product,Country,Date,Quality,Incharge\n";
-  csv+=`"${c.header.container}","${c.header.supplier}","${c.header.product}","${c.header.country}","${c.header.date}","${c.header.quality}","${c.header.incharge}"\n\n`;
-  csv+="Log Measurements\n";
-  csv+="#,LE1 (cm),L (cm),G1 (cm),G2 (cm),CBM1 (m³),CBM2 (m³)\n";
-  c.logs.forEach(l=>{
-    csv+=`${l.no},${l.le1},${l.l},${l.g1},${l.g2},${l.cbm1},${l.cbm2}\n`;
-  });
-  csv+="\nSummary\n";
-  csv+="Total Pcs,Total CBM1,Total CFT1,Avg CBM1,Total CBM2,Total CFT2,Avg CBM2\n";
-  csv+=`${c.summary.pcs},${c.summary.totalCbm1},${c.summary.totalCft1},${c.summary.avgCbm1},${c.summary.totalCbm2},${c.summary.totalCft2},${c.summary.avgCbm2}`;
   
-  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
-  const link=document.createElement("a");
-  link.href=URL.createObjectURL(blob);
-  link.download=`TimberTrack_${id}.csv`;
+  document.getElementById('dt-bl').textContent = Object.keys(blMap).length;
+  document.getElementById('dt-cont').textContent = filtered.length;
+  document.getElementById('dt-pcs').textContent = filtered.reduce((s, c) => s + c.summary.pcs, 0);
+  
+  const list = document.getElementById('dash-list');
+  
+  if (!Object.keys(blMap).length) {
+    list.innerHTML = `
+      <div class="empty">
+        <div class="empty-icon">📦</div>
+        <div class="empty-text">No data yet.<br>Create your first entry in Feed tab.</div>
+      </div>
+    `;
+    return;
+  }
+  
+  let html = '';
+  for (const bl in blMap) {
+    const blContainers = blMap[bl];
+    const totalPcs = blContainers.reduce((s, c) => s + c.summary.pcs, 0);
+    
+    html += `
+      <div class="cont-card" onclick="downloadBLExcel('${bl}')">
+        <div class="cont-head">
+          <span class="cont-id" style="font-size: 18px; color: var(--accent);">📋 ${bl}</span>
+          <span class="cont-meta">${blContainers.length} container(s) · ${totalPcs} pieces</span>
+          <button class="btn btn-small btn-ghost" style="margin-left: auto;" onclick="event.stopPropagation();downloadBLExcel('${bl}')">📥 Excel</button>
+        </div>
+        <div class="pill-row">
+    `;
+    
+    blContainers.forEach(c => {
+      html += `
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px; font-size: 12px;">
+          <strong>${c.header.container}</strong><br>
+          <span style="color: var(--text-mute);">${c.header.date}</span>
+        </div>
+      `;
+    });
+    
+    html += `
+        </div>
+      </div>
+    `;
+  }
+  
+  list.innerHTML = html;
+}
+
+function downloadBLExcel(bl) {
+  const blContainers = containers.filter(c => c.header.bl === bl);
+  if (!blContainers.length) return;
+  
+  let csv = `BILL OF LADING: ${bl}\nGenerated: ${new Date().toLocaleString()}\n\n`;
+  
+  blContainers.forEach(cont => {
+    csv += `CONTAINER: ${cont.header.container}\n`;
+    csv += `Supplier,Product,Country,Date,Quality,Incharge\n`;
+    csv += `"${cont.header.supplier}","${cont.header.product}","${cont.header.country}","${cont.header.date}","${cont.header.quality}","${cont.header.incharge}"\n\n`;
+    csv += `Log #,LE1 (cm),L (cm),G1 (cm),G2 (cm),CBM1 (m³),CBM2 (m³)\n`;
+    cont.logs.forEach(l => {
+      csv += `${l.no},${l.le1},${l.l},${l.g1},${l.g2},${l.cbm1},${l.cbm2}\n`;
+    });
+    csv += `\nSummary,Total Pcs,Total CBM1,Total CBM2,Avg CBM1,Avg CBM2\n`;
+    csv += `"","${cont.summary.pcs}","${cont.summary.totalCbm1}","${cont.summary.totalCbm2}","${cont.summary.avgCbm1}","${cont.summary.avgCbm2}"\n\n`;
+  });
+  
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `TimberTrack_${bl}.csv`;
   link.click();
-  toast(`Downloading ${id}`,'info');
+  toast(`Downloaded ${bl}`, 'success');
 }
 
-function loadContainer(id){
-  const c=containers.find(c=>c.header.container===id); if(!c) return;
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
-  document.getElementById('view-entry').classList.add('active');
-  document.querySelector('.nav-tab').classList.add('active');
-  document.getElementById('f-container').value=c.header.container;
-  document.getElementById('f-supplier').value=c.header.supplier;
-  document.getElementById('f-product').value=c.header.product;
-  document.getElementById('f-country').value=c.header.country;
-  document.getElementById('f-quality').value=c.header.quality||'';
-  document.getElementById('f-incharge').value=c.header.incharge||'';
-  logs=[];logCounter=0;
-  c.logs.forEach(l=>{logCounter++;logs.push({id:logCounter,le1:l.le1,l:l.l,g1:l.g1,g2:l.g2});});
-  renderTable();
-  toast(`Loaded ${id}`,'success');
+function saveConfig() {
+  config.gsUrl = document.getElementById('gs-url').value;
+  localStorage.setItem('tt_config', JSON.stringify(config));
 }
 
-function saveConfig(){config.gsUrl=document.getElementById('gs-url').value;localStorage.setItem('tt_config',JSON.stringify(config));}
-async function testConnection(){
-  const url=document.getElementById('gs-url').value.trim();
-  if(!url){toast('Enter Apps Script URL first','error');return;}
-  try{
+async function testConnection() {
+  const url = document.getElementById('gs-url').value.trim();
+  if (!url) {
+    toast('Enter Apps Script URL first', 'error');
+    return;
+  }
+  try {
     await fetch(url);
-    document.getElementById('gs-status').innerHTML='✅ Connected.';
-    document.getElementById('gs-status').style.color='var(--accent)';
-    toast('✅ Connected!','success');
-  }catch{
-    document.getElementById('gs-status').innerHTML='❌ Connection failed.';
-    document.getElementById('gs-status').style.color='var(--danger)';
-    toast('Connection failed','error');
+    document.getElementById('gs-status').innerHTML = '✅ Connected!';
+    document.getElementById('gs-status').style.color = 'var(--accent)';
+    toast('✅ Connected!', 'success');
+  } catch {
+    document.getElementById('gs-status').innerHTML = '❌ Connection failed';
+    document.getElementById('gs-status').style.color = 'var(--danger)';
+    toast('Connection failed', 'error');
   }
 }
-function copyScript(){navigator.clipboard.writeText(document.getElementById('apps-script-code').innerText).then(()=>toast('Script copied!','success'));}
-function toast(msg,type='success'){
-  const el=document.createElement('div');
-  el.className=`toast ${type}`;el.textContent=msg;
+
+function toast(msg, type = 'success') {
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
   document.getElementById('toast-wrap').appendChild(el);
-  setTimeout(()=>el.remove(),3200);
+  setTimeout(() => el.remove(), 3200);
 }
 </script>
+
 </body>
 </html>
