@@ -4,868 +4,511 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>TimberTrack</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:         #F8F5F0;
-  --surface:    #FFFFFF;
-  --border:     #D9D0C4;
-  --text-dark:  #1A1410;
-  --text-mute:  #6B5F52;
-  --accent:     #2D7A3E;
-  --accent-lt:  #E8F5ED;
-  --accent-dk:  #1B4A25;
-  --warn:       #D97706;
-  --warn-lt:    #FEF3E2;
-  --danger:     #DC2626;
-  --info:       #0066CC;
-  --sh:         0 2px 8px rgba(0,0,0,0.08);
-  --sh2:        0 4px 16px rgba(0,0,0,0.12);
-  --r:          12px;
+  --bg:        #F7F4EF;
+  --surface:   #FFFFFF;
+  --border:    #DDD6CC;
+  --text:      #1A1410;
+  --mute:      #6B5F52;
+  --green:     #2D7A3E;
+  --green-lt:  #E8F5ED;
+  --green-dk:  #1B4A25;
+  --blue:      #1A5FA8;
+  --blue-lt:   #E0EDFB;
+  --blue-dk:   #0D3D6F;
+  --warn:      #C2620A;
+  --warn-lt:   #FEF0E4;
+  --danger:    #C0152A;
+  --sh:        0 1px 6px rgba(0,0,0,.07);
+  --sh2:       0 4px 16px rgba(0,0,0,.12);
+  --r:         12px;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  -webkit-tap-highlight-color: transparent;
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+
+body{
+  font-family:'IBM Plex Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  font-size:15px;
+  min-height:100vh;
 }
 
-body {
-  font-family: 'IBM Plex Sans', sans-serif;
-  background: var(--bg);
-  color: var(--text-dark);
-  font-size: 16px;
-  min-height: 100vh;
+/* ── HEADER ── */
+.hdr{
+  background:var(--text);
+  height:58px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 12px;
+  position:sticky;top:0;z-index:200;
+  box-shadow:0 2px 12px rgba(0,0,0,.25);
+}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-icon{
+  width:36px;height:36px;background:var(--green);
+  border-radius:8px;display:flex;align-items:center;
+  justify-content:center;font-size:20px;flex-shrink:0;
+}
+.brand-name{color:#fff;font-size:18px;font-weight:700;white-space:nowrap}
+
+/* nav: icon-only on small, icon+text on bigger */
+.nav-tabs{display:flex;gap:3px}
+.nav-tab{
+  height:40px;
+  padding:0 10px;
+  border:none;
+  background:rgba(255,255,255,.1);
+  color:rgba(255,255,255,.55);
+  font-family:'IBM Plex Sans',sans-serif;
+  font-size:13px;font-weight:700;
+  cursor:pointer;border-radius:8px;
+  display:flex;align-items:center;gap:5px;
+  transition:all .15s;white-space:nowrap;
+  touch-action:manipulation;
+}
+.nav-tab:active{background:rgba(255,255,255,.2);color:#fff}
+.nav-tab.active{background:var(--green);color:#fff}
+.nav-lbl{display:none}
+@media(min-width:400px){.nav-lbl{display:inline}}
+
+/* ── VIEWS ── */
+.view{display:none;padding:12px;max-width:860px;margin:0 auto}
+.view.active{display:block;animation:fadeIn .18s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* ── CARD ── */
+.card{
+  background:var(--surface);
+  border:1.5px solid var(--border);
+  border-radius:var(--r);
+  padding:14px;
+  margin-bottom:12px;
+  box-shadow:var(--sh);
+}
+.card-title{
+  font-size:15px;font-weight:700;
+  color:var(--text);
+  margin-bottom:12px;padding-bottom:10px;
+  border-bottom:2px solid var(--bg);
+  display:flex;align-items:center;gap:7px;
 }
 
-/* ===== HEADER ===== */
-.app-header {
-  background: var(--text-dark);
-  padding: 12px 16px;
-  height: 62px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: var(--sh2);
+/* ── FORM GRID ── */
+/* Mobile: 1 col for full-width fields, 2 col for pairs */
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+@media(min-width:560px){
+  .form-grid{grid-template-columns:repeat(3,1fr)}
 }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
+.fg-full{grid-column:1/-1}  /* span full width */
 
-.brand-icon {
-  width: 40px;
-  height: 40px;
-  background: var(--accent);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group label{
+  font-size:10px;font-weight:700;
+  letter-spacing:.6px;text-transform:uppercase;
+  color:var(--mute);
 }
-
-.brand-name {
-  color: #FFF;
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-}
-
-.nav-tabs {
-  display: flex;
-  gap: 0;
-}
-
-.nav-tab {
-  height: 44px;
-  padding: 0 16px;
-  border: none;
-  background: rgba(255,255,255,0.1);
-  color: rgba(255,255,255,0.6);
-  font-weight: 600;
-  font-size: 14px;
-  cursor: pointer;
-  border-radius: 8px;
-  margin-left: 4px;
-  transition: all 0.15s;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  white-space: nowrap;
-  touch-action: manipulation;
-}
-
-.nav-tab:active {
-  background: rgba(255,255,255,0.2);
-  color: #FFF;
-}
-
-.nav-tab.active {
-  background: var(--accent);
-  color: #FFF;
-}
-
-/* ===== VIEWS ===== */
-.view {
-  display: none;
-  padding: 16px;
-  max-width: 900px;
-  margin: 0 auto;
-  animation: fadeIn 0.2s ease;
-}
-
-.view.active {
-  display: block;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0.95; }
-  to { opacity: 1; }
-}
-
-/* ===== CARDS ===== */
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 18px;
-  margin-bottom: 14px;
-  box-shadow: var(--sh);
-}
-
-.card-title {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text-dark);
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 2px solid var(--bg);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* ===== FORM ===== */
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 14px;
-}
-
-@media(min-width: 600px) {
-  .form-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.form-group label {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  color: var(--text-mute);
-}
-
 .form-group input,
-.form-group select {
-  height: 48px;
-  background: var(--bg);
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  padding: 0 14px;
-  color: var(--text-dark);
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 15px;
-  font-weight: 600;
-  outline: none;
-  transition: all 0.15s;
-  width: 100%;
-  -webkit-appearance: none;
+.form-group select{
+  height:48px;
+  background:var(--bg);
+  border:1.5px solid var(--border);
+  border-radius:8px;
+  padding:0 12px;
+  color:var(--text);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:14px;font-weight:600;
+  outline:none;transition:all .15s;
+  width:100%;-webkit-appearance:none;
 }
-
 .form-group input:focus,
-.form-group select:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-lt);
-  background: #FFF;
+.form-group select:focus{
+  border-color:var(--green);
+  box-shadow:0 0 0 3px var(--green-lt);
+  background:#fff;
+}
+.form-group select{
+  padding-right:32px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7'%3E%3Cpath fill='%231A1410' d='M5.5 7L0 0h11z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 11px center;
+  background-color:var(--bg);
+}
+.sel-row{display:flex;gap:7px}
+.sel-row select{flex:1;min-width:0}
+.add-btn{
+  width:48px;height:48px;flex-shrink:0;
+  background:var(--green-lt);border:1.5px solid var(--green);
+  border-radius:8px;color:var(--green-dk);
+  font-size:22px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s;touch-action:manipulation;
+}
+.add-btn:active{background:var(--green);color:#fff}
+
+/* ── STATS BAR ── */
+/* 2 cols mobile → 4 desktop  (we have 6 stats; wrap nicely) */
+.stats-bar{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;margin-bottom:12px;
+}
+@media(min-width:420px){.stats-bar{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:640px){.stats-bar{grid-template-columns:repeat(6,1fr)}}
+
+.stat-chip{
+  background:var(--surface);
+  border:1.5px solid var(--border);
+  border-radius:8px;
+  padding:10px 8px;
+  text-align:center;
+  box-shadow:var(--sh);
+}
+.stat-chip.b{border-color:var(--blue)}
+.stat-chip.g{border-color:var(--green)}
+.stat-lbl{
+  font-size:9px;font-weight:700;
+  letter-spacing:.5px;text-transform:uppercase;
+  color:var(--mute);margin-bottom:2px;
+}
+.stat-val{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:17px;font-weight:700;
+  color:var(--text);
+}
+.stat-chip.b .stat-val{color:var(--blue-dk)}
+.stat-chip.g .stat-val{color:var(--green-dk)}
+
+/* ── FEED CARD (vertical entry per log) ── */
+.feed-card{
+  background:var(--surface);
+  border:1.5px solid var(--border);
+  border-radius:var(--r);
+  padding:12px;
+  margin-bottom:10px;
+  box-shadow:var(--sh);
+}
+.feed-card.warn{border-color:var(--warn);background:var(--warn-lt)}
+
+.feed-hd{
+  display:flex;justify-content:space-between;
+  align-items:center;
+  margin-bottom:11px;
+}
+.feed-num{
+  font-size:13px;font-weight:700;
+  color:var(--green);background:var(--green-lt);
+  padding:3px 10px;border-radius:6px;
+}
+.feed-del{
+  background:none;border:none;
+  color:var(--mute);cursor:pointer;
+  font-size:18px;width:36px;height:36px;
+  border-radius:6px;display:flex;
+  align-items:center;justify-content:center;
+  transition:all .15s;touch-action:manipulation;
+}
+.feed-del:active{color:var(--danger);background:rgba(192,21,42,.1)}
+
+/* 2-col grid: LE1 | L on row 1, G1 | G2 on row 2 */
+.feed-inputs{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:10px;
 }
 
-.form-group input[readonly] {
-  color: var(--text-mute);
-  background: var(--bg);
-  cursor: default;
+.fi-grp{display:flex;flex-direction:column;gap:5px}
+.fi-lbl{
+  font-size:11px;font-weight:700;
+  letter-spacing:.5px;text-transform:uppercase;
+  color:var(--mute);text-align:center;
+}
+.fi-inp{
+  height:54px;
+  background:var(--bg);
+  border:1.5px solid var(--border);
+  border-radius:8px;
+  padding:0 8px;
+  color:var(--text);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:18px;font-weight:700;
+  text-align:center;
+  outline:none;
+  transition:all .15s;
+  width:100%;
+  -webkit-appearance:none;
+  -moz-appearance:textfield;
+}
+.fi-inp::-webkit-inner-spin-button,
+.fi-inp::-webkit-outer-spin-button{-webkit-appearance:none}
+.fi-inp:focus{
+  border-color:var(--green);
+  box-shadow:0 0 0 3px var(--green-lt);
+  background:#fff;
+}
+.fi-inp.warn-inp{border-color:var(--warn)}
+.fi-inp.warn-inp:focus{box-shadow:0 0 0 3px rgba(194,98,10,.15)}
+
+/* calc row inside feed card */
+.feed-calc{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+}
+.calc-box{
+  background:var(--bg);
+  border-radius:6px;
+  padding:6px 8px;
+  text-align:center;
+}
+.calc-lbl{font-size:9px;color:var(--mute);font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.calc-val{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:14px;font-weight:700;
+  color:var(--green-dk);
+}
+.calc-box.blue .calc-val{color:var(--blue-dk)}
+.feed-warn-msg{
+  margin-top:7px;font-size:11px;
+  color:var(--warn);font-weight:700;
+  text-align:center;
 }
 
-.form-group select {
-  padding-right: 36px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%231A1410' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  background-color: var(--bg);
+/* ── BUTTONS ── */
+.btn-row{
+  display:flex;gap:8px;flex-wrap:wrap;
+  padding-top:4px;margin-bottom:14px;
 }
-
-.sel-row {
-  display: flex;
-  gap: 8px;
+.btn{
+  height:48px;padding:0 18px;
+  border-radius:8px;border:none;
+  font-family:'IBM Plex Sans',sans-serif;
+  font-size:14px;font-weight:700;
+  cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;gap:7px;
+  white-space:nowrap;touch-action:manipulation;
 }
-
-.sel-row select {
-  flex: 1;
+.btn-primary{
+  background:var(--green);color:#fff;
+  box-shadow:0 2px 8px rgba(45,122,62,.3);
 }
-
-.add-btn {
-  width: 48px;
-  height: 48px;
-  flex-shrink: 0;
-  background: var(--accent-lt);
-  border: 1.5px solid var(--accent);
-  border-radius: 8px;
-  color: var(--accent-dk);
-  font-size: 24px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  transition: all 0.15s;
-  touch-action: manipulation;
+.btn-primary:active{background:var(--green-dk);transform:scale(.98)}
+.btn-ghost{
+  background:var(--surface);color:var(--text);
+  border:1.5px solid var(--border);
 }
-
-.add-btn:active {
-  background: var(--accent);
-  color: #FFF;
+.btn-ghost:active{border-color:var(--green);color:var(--green);background:var(--green-lt)}
+.btn-danger{
+  background:rgba(192,21,42,.08);color:var(--danger);
+  border:1.5px solid rgba(192,21,42,.25);
 }
+.btn-danger:active{background:var(--danger);color:#fff}
+.btn-sm{height:40px;padding:0 12px;font-size:13px}
 
-/* ===== VERTICAL FEEDING LAYOUT ===== */
-.feed-card {
-  background: var(--surface);
-  border: 2px solid var(--accent-lt);
-  border-radius: var(--r);
-  padding: 16px;
-  margin-bottom: 12px;
-  box-shadow: var(--sh);
-  position: relative;
+/* push submit to right on wide screens */
+@media(min-width:500px){.btn-row .btn-primary{margin-left:auto}}
+
+/* ── MODALS ── */
+.overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(26,20,16,.5);z-index:300;
+  align-items:flex-end;justify-content:center;
 }
-
-.feed-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 14px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--bg);
+.overlay.open{display:flex}
+.modal-box{
+  background:var(--surface);
+  border:1.5px solid var(--border);
+  border-radius:var(--r) var(--r) 0 0;
+  padding:22px 16px 32px;
+  width:100%;max-width:520px;
+  box-shadow:0 -6px 24px rgba(0,0,0,.14);
+  animation:slideUp .2s ease;
 }
-
-.feed-num {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--accent);
-  background: var(--accent-lt);
-  padding: 4px 10px;
-  border-radius: 6px;
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-title{font-size:19px;font-weight:700;margin-bottom:12px}
+.modal-msg{color:var(--mute);font-size:14px;line-height:1.6;margin-bottom:16px}
+.modal-btns{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.modal-input{
+  width:100%;height:48px;
+  background:var(--bg);border:1.5px solid var(--border);
+  border-radius:8px;padding:0 13px;
+  color:var(--text);font-family:'IBM Plex Mono',monospace;
+  font-size:15px;font-weight:600;outline:none;
+  margin-bottom:12px;transition:all .15s;
 }
+.modal-input:focus{border-color:var(--green);box-shadow:0 0 0 3px var(--green-lt)}
 
-.feed-del {
-  background: none;
-  border: none;
-  color: var(--text-mute);
-  cursor: pointer;
-  font-size: 20px;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  transition: all 0.15s;
-  touch-action: manipulation;
+/* ── DASHBOARD ── */
+.page-title{font-size:22px;font-weight:700;margin-bottom:12px}
+
+.filter-bar{
+  display:flex;flex-direction:column;gap:9px;
+  margin-bottom:12px;
 }
-
-.feed-del:active {
-  color: var(--danger);
-  background: rgba(220, 38, 38, 0.1);
-}
-
-.feed-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.feed-input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.feed-label {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  color: var(--text-mute);
-}
-
-.feed-input {
-  height: 52px;
-  background: var(--bg);
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  padding: 0 14px;
-  color: var(--text-dark);
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 16px;
-  font-weight: 700;
-  text-align: center;
-  outline: none;
-  transition: all 0.15s;
-  -webkit-appearance: none;
-  -moz-appearance: textfield;
-}
-
-.feed-input::-webkit-inner-spin-button,
-.feed-input::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-}
-
-.feed-input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-lt);
-  background: #FFF;
-}
-
-.feed-warn {
-  border-color: var(--warn);
-  background: var(--warn-lt);
-}
-
-.feed-warn:focus {
-  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2);
-}
-
-/* ===== STATS ===== */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  margin-bottom: 16px;
-}
-
-@media(min-width: 480px) {
-  .stats-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-.stat-chip {
-  background: var(--bg);
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  padding: 12px 10px;
-  text-align: center;
-  box-shadow: var(--sh);
-}
-
-.stat-label {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  color: var(--text-mute);
-  margin-bottom: 4px;
-}
-
-.stat-value {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--accent-dk);
-  font-family: 'IBM Plex Mono', monospace;
-}
-
-/* ===== SUMMARY TABLE ===== */
-.summary-scroll {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  margin-bottom: 16px;
-  border-radius: var(--r);
-  box-shadow: var(--sh);
-  border: 1px solid var(--border);
-}
-
-.summary-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 600px;
-  background: var(--surface);
-}
-
-.summary-table thead {
-  background: var(--bg);
-  border-bottom: 2px solid var(--border);
-}
-
-.summary-table th {
-  padding: 10px 8px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  color: var(--text-mute);
-  text-align: center;
-  white-space: nowrap;
-  border-right: 1px solid var(--border);
-}
-
-.summary-table th:last-child {
-  border-right: none;
-}
-
-.summary-table tbody tr {
-  border-bottom: 1px solid var(--bg);
-}
-
-.summary-table tbody tr:nth-child(even) {
-  background: #FAFAF7;
-}
-
-.summary-table tbody tr.warn {
-  background: var(--warn-lt);
-}
-
-.summary-table td {
-  padding: 8px 6px;
-  font-size: 13px;
-  font-weight: 600;
-  text-align: center;
-  color: var(--text-dark);
-  font-family: 'IBM Plex Mono', monospace;
-  border-right: 1px solid var(--border);
-}
-
-.summary-table td:last-child {
-  border-right: none;
-}
-
-.td-cbm {
-  color: var(--accent-dk);
-}
-
-/* ===== BUTTONS ===== */
-.btn-row {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 12px;
-}
-
-.btn {
-  height: 48px;
-  padding: 0 20px;
-  border-radius: 8px;
-  border: none;
-  font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.15s;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  white-space: nowrap;
-  touch-action: manipulation;
-}
-
-.btn-primary {
-  background: var(--accent);
-  color: #FFF;
-  box-shadow: 0 2px 8px rgba(45, 122, 62, 0.3);
-}
-
-.btn-primary:active {
-  background: var(--accent-dk);
-  transform: scale(0.98);
-}
-
-.btn-ghost {
-  background: var(--surface);
-  color: var(--text-dark);
-  border: 1.5px solid var(--border);
-}
-
-.btn-ghost:active {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: var(--accent-lt);
-}
-
-.btn-danger {
-  background: rgba(220, 38, 38, 0.1);
-  color: var(--danger);
-  border: 1.5px solid rgba(220, 38, 38, 0.3);
-}
-
-.btn-danger:active {
-  background: var(--danger);
-  color: #FFF;
-}
-
-.btn-small {
-  height: 40px;
-  padding: 0 14px;
-  font-size: 13px;
-}
-
-/* ===== DASHBOARD ===== */
-.page-title {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--text-dark);
-  margin-bottom: 16px;
-}
-
-.filter-bar {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-
-@media(min-width: 500px) {
-  .filter-bar {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-}
-
+@media(min-width:480px){.filter-bar{flex-direction:row;flex-wrap:wrap}}
 .filter-bar input,
-.filter-bar select {
-  flex: 1;
-  min-width: 140px;
-  height: 48px;
-  background: var(--surface);
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  padding: 0 14px;
-  color: var(--text-dark);
-  font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 14px;
-  outline: none;
-  transition: all 0.15s;
-  -webkit-appearance: none;
+.filter-bar select{
+  flex:1;min-width:130px;height:48px;
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:8px;padding:0 13px;
+  color:var(--text);font-size:14px;
+  font-family:'IBM Plex Sans',sans-serif;
+  outline:none;transition:all .15s;-webkit-appearance:none;
 }
-
-.filter-bar select {
-  padding-right: 36px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%231A1410' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  background-color: var(--surface);
+.filter-bar select{
+  padding-right:32px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7'%3E%3Cpath fill='%231A1410' d='M5.5 7L0 0h11z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 11px center;
+  background-color:var(--surface);
 }
-
 .filter-bar input:focus,
-.filter-bar select:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-lt);
-}
+.filter-bar select:focus{border-color:var(--green);box-shadow:0 0 0 3px var(--green-lt)}
 
-.kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  margin-bottom: 16px;
+/* kpi chips — 3 cols mobile, 6 desktop */
+.kpi-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;margin-bottom:12px;
 }
-
-@media(min-width: 480px) {
-  .kpi-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+@media(min-width:500px){.kpi-grid{grid-template-columns:repeat(6,1fr)}}
+.kpi-chip{
+  background:var(--surface);
+  border:1.5px solid var(--border);
+  border-radius:8px;padding:10px 8px;
+  text-align:center;box-shadow:var(--sh);
 }
+.kpi-chip.g{border-color:var(--green);background:var(--green-lt)}
+.kpi-chip.b{border-color:var(--blue);background:var(--blue-lt)}
+.kpi-lbl{font-size:8px;color:var(--mute);font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:2px}
+.kpi-val{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:700;color:var(--text)}
+.kpi-chip.g .kpi-val{color:var(--green-dk)}
+.kpi-chip.b .kpi-val{color:var(--blue-dk)}
 
-.kpi-card {
-  background: var(--surface);
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  padding: 14px 12px;
-  text-align: center;
-  box-shadow: var(--sh);
+/* BL cards */
+.bl-card{
+  background:var(--surface);
+  border:1.5px solid var(--border);
+  border-radius:var(--r);
+  margin-bottom:10px;
+  box-shadow:var(--sh);overflow:hidden;
 }
-
-.kpi-card.accent {
-  border-color: var(--accent);
-  background: var(--accent-lt);
+.bl-head{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 14px;
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+  flex-wrap:wrap;gap:8px;
 }
-
-.kpi-lbl {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  color: var(--text-mute);
-  margin-bottom: 4px;
+.bl-id{
+  font-size:16px;font-weight:700;
+  color:var(--green-dk);
+  font-family:'IBM Plex Mono',monospace;
 }
+.bl-meta{font-size:12px;color:var(--mute);flex:1}
+.bl-body{padding:10px 14px}
 
-.kpi-val {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--accent-dk);
-  font-family: 'IBM Plex Mono', monospace;
+.cont-row{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 0;
+  border-bottom:1px solid var(--bg);
+  flex-wrap:wrap;
 }
-
-.cont-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.cont-row:last-child{border-bottom:none}
+.cont-no{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:13px;font-weight:700;
+  background:var(--bg);padding:3px 8px;
+  border-radius:5px;
 }
-
-.cont-card {
-  background: var(--surface);
-  border: 1.5px solid var(--border);
-  border-radius: var(--r);
-  padding: 14px 16px;
-  cursor: pointer;
-  transition: all 0.15s;
-  box-shadow: var(--sh);
+.cont-date{font-size:11px;color:var(--mute)}
+.pill-wrap{display:flex;gap:5px;flex-wrap:wrap;margin-left:auto}
+.pill{
+  font-size:10px;padding:2px 7px;
+  border-radius:5px;font-weight:600;
+  background:var(--bg);border:1px solid var(--border);
+  color:var(--text);
 }
+.pill.g{background:var(--green-lt);border-color:var(--green);color:var(--green-dk)}
+.pill.b{background:var(--blue-lt);border-color:var(--blue);color:var(--blue-dk)}
 
-.cont-card:active {
-  border-color: var(--accent);
-  background: var(--accent-lt);
+.empty{text-align:center;padding:60px 20px;color:var(--mute)}
+.empty-icon{font-size:44px;margin-bottom:10px}
+.empty-text{font-size:13px;line-height:1.7}
+
+/* ── TOAST ── */
+.toast-wrap{
+  position:fixed;bottom:18px;right:12px;
+  display:flex;flex-direction:column;gap:7px;z-index:999;
+  max-width:280px;
 }
-
-.cont-head {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 10px;
-  flex-wrap: wrap;
+.toast{
+  background:var(--surface);
+  border:1.5px solid var(--border);
+  border-radius:8px;padding:10px 14px;
+  font-size:13px;font-weight:600;
+  box-shadow:var(--sh2);color:var(--text);
+  animation:toastIn .18s ease;
 }
-
-.cont-id {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--text-dark);
-  font-family: 'IBM Plex Mono', monospace;
-  background: var(--bg);
-  padding: 4px 10px;
-  border-radius: 6px;
-}
-
-.cont-meta {
-  font-size: 13px;
-  color: var(--text-mute);
-  flex: 1;
-}
-
-.pill-row {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.pill {
-  font-size: 12px;
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-weight: 600;
-  background: var(--bg);
-  color: var(--text-dark);
-  border: 1px solid var(--border);
-}
-
-.pill.accent {
-  background: var(--accent-lt);
-  border-color: var(--accent);
-  color: var(--accent-dk);
-}
-
-.empty {
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--text-mute);
-}
-
-.empty-icon {
-  font-size: 48px;
-  margin-bottom: 12px;
-}
-
-.empty-text {
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-/* ===== MODALS ===== */
-.modal-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(26, 20, 16, 0.5);
-  z-index: 300;
-  align-items: flex-end;
-  justify-content: center;
-}
-
-.modal-overlay.open {
-  display: flex;
-}
-
-.modal-box {
-  background: var(--surface);
-  border: 1.5px solid var(--border);
-  border-radius: var(--r) var(--r) 0 0;
-  padding: 24px 18px 32px;
-  width: 100%;
-  max-width: 520px;
-  box-shadow: var(--sh2);
-  animation: slideUp 0.2s ease;
-}
-
-@keyframes slideUp {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
-}
-
-.modal-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--text-dark);
-  margin-bottom: 14px;
-}
-
-.modal-msg {
-  color: var(--text-mute);
-  font-size: 15px;
-  line-height: 1.6;
-  margin-bottom: 18px;
-}
-
-.modal-btns {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.modal-input {
-  width: 100%;
-  height: 48px;
-  background: var(--bg);
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  padding: 0 14px;
-  color: var(--text-dark);
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 15px;
-  font-weight: 600;
-  outline: none;
-  margin-bottom: 12px;
-  transition: all 0.15s;
-}
-
-.modal-input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-lt);
-}
-
-/* ===== TOAST ===== */
-.toast-wrap {
-  position: fixed;
-  bottom: 20px;
-  right: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  z-index: 999;
-  max-width: 300px;
-}
-
-.toast {
-  background: var(--surface);
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  padding: 12px 16px;
-  font-size: 14px;
-  font-weight: 600;
-  animation: slideIn 0.2s ease;
-  box-shadow: var(--sh2);
-  color: var(--text-dark);
-}
-
-.toast.success {
-  border-color: var(--accent);
-  background: var(--accent-lt);
-  color: var(--accent-dk);
-}
-
-.toast.error {
-  border-color: var(--danger);
-  background: rgba(220, 38, 38, 0.1);
-  color: var(--danger);
-}
-
-@keyframes slideIn {
-  from { transform: translateX(110%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
-}
-
+.toast.ok{border-color:var(--green);background:var(--green-lt);color:var(--green-dk)}
+.toast.err{border-color:var(--danger);background:rgba(192,21,42,.08);color:var(--danger)}
+@keyframes toastIn{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
 </style>
 </head>
 <body>
 
-<header class="app-header">
+<header class="hdr">
   <div class="brand">
     <div class="brand-icon">🪵</div>
     <div class="brand-name">TimberTrack</div>
   </div>
   <nav class="nav-tabs">
-    <button class="nav-tab active" onclick="switchTab('entry',this)">📋 Feed</button>
-    <button class="nav-tab" onclick="switchTab('dashboard',this)">📊 View</button>
-    <button class="nav-tab" onclick="switchTab('setup',this)">⚙️ Setup</button>
+    <button class="nav-tab active" onclick="switchTab('entry',this)">📋 <span class="nav-lbl">Feed</span></button>
+    <button class="nav-tab"        onclick="switchTab('dash',this)">📊 <span class="nav-lbl">Dashboard</span></button>
+    <button class="nav-tab"        onclick="switchTab('setup',this)">⚙️ <span class="nav-lbl">Setup</span></button>
   </nav>
 </header>
 
-<!-- ENTRY TAB -->
+<!-- ══ FEED VIEW ══ -->
 <div id="view-entry" class="view active">
+
+  <!-- Container header info -->
   <div class="card">
     <div class="card-title">📦 Container Info</div>
     <div class="form-grid">
       <div class="form-group">
         <label>BL Number</label>
-        <input type="text" id="f-bl" placeholder="e.g. BL123456" inputmode="text">
+        <input type="text" id="f-bl" placeholder="BL123456" inputmode="text">
       </div>
       <div class="form-group">
         <label>Container No.</label>
-        <input type="text" id="f-container" placeholder="e.g. 104090-9" inputmode="text">
+        <input type="text" id="f-container" placeholder="104090-9" inputmode="text">
       </div>
       <div class="form-group">
         <label>Supplier</label>
         <div class="sel-row">
           <select id="f-supplier"></select>
-          <button class="add-btn" onclick="openAddModal('supplier')">＋</button>
+          <button class="add-btn" onclick="openAdd('supplier')">＋</button>
         </div>
       </div>
       <div class="form-group">
         <label>Country</label>
         <div class="sel-row">
           <select id="f-country"></select>
-          <button class="add-btn" onclick="openAddModal('country')">＋</button>
+          <button class="add-btn" onclick="openAdd('country')">＋</button>
         </div>
       </div>
       <div class="form-group">
         <label>Product / Species</label>
-        <input type="text" id="f-product" placeholder="e.g. ECU 6×20" inputmode="text">
+        <input type="text" id="f-product" placeholder="ECU 6×20" inputmode="text">
       </div>
       <div class="form-group">
         <label>Feeding Date</label>
@@ -873,598 +516,588 @@ body {
       </div>
       <div class="form-group">
         <label>Quality Code</label>
-        <input type="text" id="f-quality" placeholder="e.g. N5V" inputmode="text">
+        <input type="text" id="f-quality" placeholder="N5V" inputmode="text">
       </div>
       <div class="form-group">
-        <label>Incharge Name</label>
+        <label>Incharge</label>
         <input type="text" id="f-incharge" placeholder="Staff name" inputmode="text">
       </div>
     </div>
   </div>
 
-  <div class="stats-grid">
+  <!-- Live totals — 6 chips: Pcs / CBM1 / CFT1 / CBM2 / CFT2 / Avg CBM1 -->
+  <div class="stats-bar">
     <div class="stat-chip">
-      <div class="stat-label">Total Pieces</div>
-      <div class="stat-value" id="s-pcs">0</div>
+      <div class="stat-lbl">Pieces</div>
+      <div class="stat-val" id="s-pcs">0</div>
+    </div>
+    <div class="stat-chip b">
+      <div class="stat-lbl">CBM 1</div>
+      <div class="stat-val" id="s-cbm1">0.000</div>
+    </div>
+    <div class="stat-chip b">
+      <div class="stat-lbl">CFT 1</div>
+      <div class="stat-val" id="s-cft1">0.000</div>
+    </div>
+    <div class="stat-chip g">
+      <div class="stat-lbl">CBM 2</div>
+      <div class="stat-val" id="s-cbm2">0.000</div>
+    </div>
+    <div class="stat-chip g">
+      <div class="stat-lbl">CFT 2</div>
+      <div class="stat-val" id="s-cft2">0.000</div>
     </div>
     <div class="stat-chip">
-      <div class="stat-label">Total CBM1</div>
-      <div class="stat-value" id="s-cbm1">0.000</div>
-    </div>
-    <div class="stat-chip">
-      <div class="stat-label">Total CBM2</div>
-      <div class="stat-value" id="s-cbm2">0.000</div>
-    </div>
-    <div class="stat-chip">
-      <div class="stat-label">Avg CBM1</div>
-      <div class="stat-value" id="s-avg">0.000</div>
+      <div class="stat-lbl">Avg CBM1</div>
+      <div class="stat-val" id="s-avg">0.000</div>
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-title">📝 Log Feeding (Vertical)</div>
-    <p style="color: var(--text-mute); font-size: 13px; margin-bottom: 14px;">👉 Enter measurements for each log below. Staff feeds top to bottom on phone.</p>
-    <div id="feed-list"></div>
-  </div>
-
-  <div class="summary-scroll" style="display: none;" id="summary-container">
-    <table class="summary-table">
-      <thead>
-        <tr>
-          <th>Log #</th>
-          <th>LE1 (cm)</th>
-          <th>L (cm)</th>
-          <th>G1 (cm)</th>
-          <th>G2 (cm)</th>
-          <th>CBM1 (m³)</th>
-          <th>CBM2 (m³)</th>
-        </tr>
-      </thead>
-      <tbody id="summary-tbody"></tbody>
-    </table>
-  </div>
+  <!-- Vertical feed cards -->
+  <div id="feed-list"></div>
 
   <div class="btn-row">
     <button class="btn btn-ghost" onclick="addFeed()">➕ Add Log</button>
     <button class="btn btn-ghost" onclick="addFeeds(5)">➕ Add 5</button>
-    <button class="btn btn-danger btn-small" onclick="clearFeeds()">🗑 Clear</button>
-    <button class="btn btn-primary" style="margin-left: auto;" onclick="submitContainer()">✅ Save & Submit</button>
+    <button class="btn btn-danger btn-sm" onclick="clearFeeds()">🗑 Clear</button>
+    <button class="btn btn-primary" onclick="doSubmit()">✅ Save & Submit</button>
   </div>
 </div>
 
-<!-- DASHBOARD TAB -->
-<div id="view-dashboard" class="view">
+<!-- ══ DASHBOARD VIEW ══ -->
+<div id="view-dash" class="view">
   <div class="page-title">📊 Dashboard</div>
-  
+
   <div class="filter-bar">
-    <input type="text" id="dash-search" placeholder="🔍 Search BL / Container…" oninput="renderDashboard()" inputmode="search">
-    <select id="dash-bl" onchange="renderDashboard()">
+    <input type="text" id="d-search" placeholder="🔍 Search BL / Container…"
+           oninput="renderDash()" inputmode="search">
+    <select id="d-bl" onchange="renderDash()">
       <option value="">All BL Numbers</option>
     </select>
-    <select id="dash-country" onchange="renderDashboard()">
+    <select id="d-country" onchange="renderDash()">
       <option value="">All Countries</option>
     </select>
   </div>
 
+  <!-- 6 KPI chips -->
   <div class="kpi-grid">
-    <div class="kpi-card accent">
-      <div class="kpi-lbl">BL Count</div>
-      <div class="kpi-val" id="dt-bl">0</div>
-    </div>
-    <div class="kpi-card accent">
-      <div class="kpi-lbl">Containers</div>
-      <div class="kpi-val" id="dt-cont">0</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-lbl">Total Pieces</div>
-      <div class="kpi-val" id="dt-pcs">0</div>
-    </div>
+    <div class="kpi-chip g"><div class="kpi-lbl">BL Count</div><div class="kpi-val" id="k-bl">0</div></div>
+    <div class="kpi-chip"><div class="kpi-lbl">Containers</div><div class="kpi-val" id="k-cont">0</div></div>
+    <div class="kpi-chip"><div class="kpi-lbl">Pieces</div><div class="kpi-val" id="k-pcs">0</div></div>
+    <div class="kpi-chip b"><div class="kpi-lbl">Total CBM1</div><div class="kpi-val" id="k-cbm1">0.000</div></div>
+    <div class="kpi-chip b"><div class="kpi-lbl">Total CFT1</div><div class="kpi-val" id="k-cft1">0.000</div></div>
+    <div class="kpi-chip g"><div class="kpi-lbl">Total CBM2</div><div class="kpi-val" id="k-cbm2">0.000</div></div>
   </div>
 
   <div id="dash-list"></div>
 </div>
 
-<!-- SETUP TAB -->
+<!-- ══ SETUP VIEW ══ -->
 <div id="view-setup" class="view">
   <div class="card">
-    <div class="card-title">🔗 Google Sheets Setup</div>
-    <div class="form-group" style="margin-bottom: 12px;">
+    <div class="card-title">🔗 Google Sheets</div>
+    <div class="form-group" style="margin-bottom:12px">
       <label>Apps Script Web App URL</label>
-      <input type="text" id="gs-url" placeholder="https://script.google.com/macros/s/…/exec" oninput="saveConfig()" inputmode="url">
+      <input type="text" id="gs-url" placeholder="https://script.google.com/macros/s/…/exec"
+             oninput="saveConfig()" inputmode="url">
     </div>
-    <div id="gs-status" style="font-size: 13px; color: var(--text-mute); margin-bottom: 12px;">
-      ⚠️ Not connected
+    <div id="gs-status" style="font-size:13px;color:var(--mute);margin-bottom:12px">
+      ⚠️ Not connected — paste your Apps Script URL above.
     </div>
-    <button class="btn btn-ghost" onclick="testConnection()">🔄 Test Connection</button>
+    <button class="btn btn-ghost" onclick="testGS()">🔄 Test Connection</button>
   </div>
 
   <div class="card">
-    <div class="card-title">📋 How to Set Up</div>
-    <ol style="font-size: 13px; color: var(--text-mute); line-height: 1.8; padding-left: 18px; margin-bottom: 12px;">
-      <li>Create a Google Sheet with two tabs: <strong>LOG_DATA</strong> and <strong>SUMMARY</strong></li>
-      <li>Go to <strong>Extensions → Apps Script</strong></li>
-      <li>Paste the script code (below)</li>
-      <li>Deploy as Web App (Execute as: Me, Access: Anyone)</li>
-      <li>Copy the Web App URL and paste above</li>
-    </ol>
-  </div>
-
-  <div class="card">
-    <div class="card-title">💾 Database Schema</div>
-    <p style="font-size: 12px; color: var(--text-mute); margin-bottom: 10px;"><strong>LOG_DATA Headers:</strong></p>
-    <p style="font-size: 12px; background: var(--bg); padding: 10px; border-radius: 6px; margin-bottom: 14px; font-family: 'IBM Plex Mono', monospace; color: var(--accent-dk);">
-      BLNo | ContainerNo | Supplier | Product | Country | Date | Quality | Incharge | LogNo | LE1 | L | G1 | G2 | CBM1 | CBM2
+    <div class="card-title">📋 Sheet Column Headers</div>
+    <p style="font-size:12px;color:var(--mute);margin-bottom:8px"><strong>LOG_DATA</strong></p>
+    <p style="font-size:11px;font-family:'IBM Plex Mono',monospace;background:var(--bg);padding:9px;border-radius:6px;color:var(--green-dk);line-height:1.7;margin-bottom:12px;word-break:break-all">
+      BLNo · ContainerNo · Supplier · Product · Country · Date · Quality · Incharge · LogNo · LE1 · L · G1 · G2 · CBM1 · CFT1 · CBM2 · CFT2
     </p>
-    
-    <p style="font-size: 12px; color: var(--text-mute); margin-bottom: 10px;"><strong>SUMMARY Headers:</strong></p>
-    <p style="font-size: 12px; background: var(--bg); padding: 10px; border-radius: 6px; font-family: 'IBM Plex Mono', monospace; color: var(--accent-dk);">
-      BLNo | ContainerNo | Supplier | Product | Country | Date | Quality | Pcs | TotalCBM1 | TotalCBM2 | AvgCBM1 | AvgCBM2
+    <p style="font-size:12px;color:var(--mute);margin-bottom:8px"><strong>SUMMARY</strong></p>
+    <p style="font-size:11px;font-family:'IBM Plex Mono',monospace;background:var(--bg);padding:9px;border-radius:6px;color:var(--green-dk);line-height:1.7;word-break:break-all">
+      BLNo · ContainerNo · Supplier · Product · Country · Date · Quality · Pcs · TotalCBM1 · TotalCFT1 · AvgCBM1 · TotalCBM2 · TotalCFT2 · AvgCBM2
     </p>
   </div>
 </div>
 
 <!-- ADD MODAL -->
-<div class="modal-overlay" id="add-modal">
+<div class="overlay" id="add-modal">
   <div class="modal-box">
-    <div class="modal-title" id="add-modal-title">Add Supplier</div>
-    <input class="modal-input" type="text" id="add-modal-input" placeholder="Enter name…" inputmode="text" onkeydown="if(event.key==='Enter')confirmAdd()">
+    <div class="modal-title" id="add-title">Add Supplier</div>
+    <input class="modal-input" type="text" id="add-input" placeholder="Enter name…"
+           inputmode="text" onkeydown="if(event.key==='Enter')confirmAdd()">
     <div class="modal-btns">
-      <button class="btn btn-primary" onclick="confirmAdd()">Add</button>
-      <button class="btn btn-ghost" onclick="closeAddModal()">Cancel</button>
+      <button class="btn btn-primary" style="justify-content:center" onclick="confirmAdd()">Add</button>
+      <button class="btn btn-ghost"   style="justify-content:center" onclick="closeAdd()">Cancel</button>
     </div>
   </div>
 </div>
 
 <!-- SUBMIT MODAL -->
-<div class="modal-overlay" id="submit-modal">
+<div class="overlay" id="sub-modal">
   <div class="modal-box">
-    <div class="modal-title">✅ Save Container Data</div>
-    <div class="modal-msg" id="modal-msg">Confirm submission…</div>
+    <div class="modal-title">✅ Confirm Submission</div>
+    <div class="modal-msg" id="sub-msg">…</div>
     <div class="modal-btns">
-      <button class="btn btn-primary" onclick="confirmSubmit()">Confirm</button>
-      <button class="btn btn-ghost" onclick="closeSubmitModal()">Cancel</button>
+      <button class="btn btn-primary" style="justify-content:center" onclick="confirmSubmit()">Confirm</button>
+      <button class="btn btn-ghost"   style="justify-content:center" onclick="closeSub()">Cancel</button>
     </div>
   </div>
 </div>
 
-<div class="toast-wrap" id="toast-wrap"></div>
+<div class="toast-wrap" id="toasts"></div>
 
 <script>
-let feeds = [], feedCounter = 0;
+/* ── STATE ── */
+let feeds = [], fCounter = 0;
 let containers = JSON.parse(localStorage.getItem('tt_containers') || '[]');
-let config = JSON.parse(localStorage.getItem('tt_config') || '{}');
-let suppliers = JSON.parse(localStorage.getItem('tt_suppliers') || '["SAWING","TROPICAL TIMBER","AMAZON LOGS","PACIFIC HARDWOOD","CEDAR EXPORTS"]');
-let countries = JSON.parse(localStorage.getItem('tt_countries') || '["Ecuador","Brazil","Indonesia","Malaysia","Myanmar","Cameroon","Gabon"]');
-let addTarget = '';
+let config     = JSON.parse(localStorage.getItem('tt_config')     || '{}');
+let suppliers  = JSON.parse(localStorage.getItem('tt_suppliers')  || '["SAWING","TROPICAL TIMBER","AMAZON LOGS","PACIFIC HARDWOOD","CEDAR EXPORTS"]');
+let countries  = JSON.parse(localStorage.getItem('tt_countries')  || '["Ecuador","Brazil","Indonesia","Malaysia","Myanmar","Cameroon","Gabon"]');
+let addTarget  = '';
 
+const CFT = 35.315; // 1 m³ = 35.315 ft³
+
+/* ── INIT ── */
 document.addEventListener('DOMContentLoaded', () => {
-  const today = new Date().toISOString().split('T')[0];
-  document.getElementById('f-date').value = today;
-  renderDropdowns();
+  document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
   if (config.gsUrl) document.getElementById('gs-url').value = config.gsUrl;
+  renderDropdowns();
   addFeed();
-  renderDashboard();
+  renderDash();
 });
 
+/* ── DROPDOWNS ── */
 function renderDropdowns() {
-  const sSel = document.getElementById('f-supplier');
-  const cSel = document.getElementById('f-country');
-  const sv = sSel.value;
-  const cv = cSel.value;
-  
-  sSel.innerHTML = '<option value="">Select Supplier</option>' + suppliers.map(s => `<option>${s}</option>`).join('');
-  cSel.innerHTML = '<option value="">Select Country</option>' + countries.map(c => `<option>${c}</option>`).join('');
-  
-  if (sv) sSel.value = sv;
-  if (cv) cSel.value = cv;
-  
-  const dbl = document.getElementById('dash-bl');
-  const dco = document.getElementById('dash-country');
-  
-  if (dbl) {
-    const blOptions = [...new Set(containers.map(c => c.header.bl).filter(Boolean))].sort();
-    const v = dbl.value;
-    dbl.innerHTML = '<option value="">All BL Numbers</option>' + blOptions.map(b => `<option>${b}</option>`).join('');
-    dbl.value = v;
+  const fSup = document.getElementById('f-supplier');
+  const fCou = document.getElementById('f-country');
+  const sv = fSup.value, cv = fCou.value;
+
+  fSup.innerHTML = '<option value="">— Select Supplier —</option>' +
+    suppliers.map(s => `<option>${escH(s)}</option>`).join('');
+  fCou.innerHTML = '<option value="">— Select Country —</option>' +
+    countries.map(c => `<option>${escH(c)}</option>`).join('');
+
+  if (sv) fSup.value = sv;
+  if (cv) fCou.value = cv;
+
+  // dashboard filters
+  const dBL   = document.getElementById('d-bl');
+  const dCou  = document.getElementById('d-country');
+  if (dBL) {
+    const bls = [...new Set(containers.map(c => c.header.bl).filter(Boolean))].sort();
+    const bv  = dBL.value;
+    dBL.innerHTML = '<option value="">All BL Numbers</option>' +
+      bls.map(b => `<option>${escH(b)}</option>`).join('');
+    dBL.value = bv;
   }
-  
-  if (dco) {
-    const v = dco.value;
-    dco.innerHTML = '<option value="">All Countries</option>' + countries.map(c => `<option>${c}</option>`).join('');
-    dco.value = v;
+  if (dCou) {
+    const dv = dCou.value;
+    dCou.innerHTML = '<option value="">All Countries</option>' +
+      countries.map(c => `<option>${escH(c)}</option>`).join('');
+    dCou.value = dv;
   }
 }
 
-function openAddModal(type) {
-  addTarget = type;
-  document.getElementById('add-modal-title').textContent = type === 'supplier' ? 'Add New Supplier' : 'Add New Country';
-  document.getElementById('add-modal-input').value = '';
-  document.getElementById('add-modal').classList.add('open');
-  setTimeout(() => document.getElementById('add-modal-input').focus(), 100);
-}
-
-function closeAddModal() {
-  document.getElementById('add-modal').classList.remove('open');
-}
-
-function confirmAdd() {
-  const val = document.getElementById('add-modal-input').value.trim();
-  if (!val) {
-    toast('Enter a name', 'error');
-    return;
-  }
-  
-  if (addTarget === 'supplier') {
-    if (!suppliers.includes(val)) {
-      suppliers.push(val);
-      localStorage.setItem('tt_suppliers', JSON.stringify(suppliers));
-    }
-    renderDropdowns();
-    document.getElementById('f-supplier').value = val;
-    toast(`Supplier added ✓`, 'success');
-  } else {
-    if (!countries.includes(val)) {
-      countries.push(val);
-      localStorage.setItem('tt_countries', JSON.stringify(countries));
-    }
-    renderDropdowns();
-    document.getElementById('f-country').value = val;
-    toast(`Country added ✓`, 'success');
-  }
-  
-  closeAddModal();
-}
-
+/* ── TAB SWITCH ── */
 function switchTab(name, btn) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
   document.getElementById('view-' + name).classList.add('active');
   btn.classList.add('active');
-  if (name === 'dashboard') renderDashboard();
+  if (name === 'dash') renderDash();
 }
 
-function calcLog(log) {
-  const le1 = parseFloat(log.le1) || 0;
-  const l = parseFloat(log.l) || 0;
-  const g1 = parseFloat(log.g1) || 0;
-  const g2 = parseFloat(log.g2) || 0;
-  const cbm1 = (le1 && g1 && g2) ? parseFloat(((le1 * g1 * g2) / 16000000).toFixed(4)) : 0;
-  const cbm2 = (l && g1 && g2) ? parseFloat(((l * g1 * g2) / 16000000).toFixed(4)) : 0;
-  return { cbm1, cbm2, le1, l, g1, g2 };
+/* ── CBM CALC ── */
+function calc(f) {
+  const le1 = +f.le1 || 0, l = +f.l || 0;
+  const g1  = +f.g1  || 0, g2 = +f.g2 || 0;
+  const cbm1 = (le1 && g1 && g2) ? +(le1 * g1 * g2 / 16000000).toFixed(3) : 0;
+  const cbm2 = (l   && g1 && g2) ? +(l   * g1 * g2 / 16000000).toFixed(3) : 0;
+  return { cbm1, cbm2, cft1: +(cbm1 * CFT).toFixed(3), cft2: +(cbm2 * CFT).toFixed(3), le1, l, g1, g2 };
 }
 
-function renderFeedCard(log, idx) {
-  const { cbm1, cbm2, le1, l, g1, g2 } = calcLog(log);
+/* ── RENDER ONE FEED CARD ── */
+function feedCardHTML(f, idx) {
+  const { cbm1, cbm2, cft1, cft2, g1, g2 } = calc(f);
   const warn = (g1 > 0 && g1 < 35) || (g2 > 0 && g2 < 35);
-  
-  return `
-    <div class="feed-card${warn ? ' warn-card' : ''}">
-      <div class="feed-header">
-        <div class="feed-num">Log #${idx + 1}</div>
-        <button class="feed-del" onclick="deleteFeed(${log.id})" title="Delete">✕</button>
-      </div>
-      <div class="feed-grid">
-        <div class="feed-input-group">
-          <div class="feed-label">LE1 (cm)</div>
-          <input class="feed-input${warn ? ' feed-warn' : ''}" type="number" inputmode="numeric" placeholder="260" value="${log.le1}" 
-            onchange="onFeedInput(${log.id},'le1',this.value)" oninput="onFeedInput(${log.id},'le1',this.value)">
-        </div>
-        <div class="feed-input-group">
-          <div class="feed-label">L (cm)</div>
-          <input class="feed-input${warn ? ' feed-warn' : ''}" type="number" inputmode="numeric" placeholder="260" value="${log.l}" 
-            onchange="onFeedInput(${log.id},'l',this.value)" oninput="onFeedInput(${log.id},'l',this.value)">
-        </div>
-        <div class="feed-input-group">
-          <div class="feed-label">G1 (cm)</div>
-          <input class="feed-input${warn ? ' feed-warn' : ''}" type="number" inputmode="numeric" placeholder="70" value="${log.g1}" 
-            onchange="onFeedInput(${log.id},'g1',this.value)" oninput="onFeedInput(${log.id},'g1',this.value)">
-        </div>
-        <div class="feed-input-group">
-          <div class="feed-label">G2 (cm)</div>
-          <input class="feed-input${warn ? ' feed-warn' : ''}" type="number" inputmode="numeric" placeholder="70" value="${log.g2}" 
-            onchange="onFeedInput(${log.id},'g2',this.value)" oninput="onFeedInput(${log.id},'g2',this.value)">
-        </div>
-      </div>
-      <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--bg); display: flex; gap: 8px; font-size: 12px; justify-content: space-around;">
-        <div><strong>CBM1:</strong> <span class="td-cbm">${cbm1 > 0 ? cbm1.toFixed(4) : '—'}</span></div>
-        <div><strong>CBM2:</strong> <span class="td-cbm">${cbm2 > 0 ? cbm2.toFixed(4) : '—'}</span></div>
-      </div>
-      ${warn ? '<div style="margin-top: 8px; font-size: 11px; color: var(--warn); font-weight: 700;">⚠️ Low measurement (G < 35cm)</div>' : ''}
+  const wc   = warn ? ' warn-inp' : '';
+  const fw   = warn ? ' warn' : '';
+
+  return `<div class="feed-card${fw}" id="fc-${f.id}">
+    <div class="feed-hd">
+      <div class="feed-num">Log #${idx + 1}</div>
+      <button class="feed-del" onclick="delFeed(${f.id})">✕</button>
     </div>
-  `;
+    <div class="feed-inputs">
+      <div class="fi-grp">
+        <div class="fi-lbl">LE1 (cm)</div>
+        <input class="fi-inp${wc}" type="number" inputmode="numeric" placeholder="260"
+          value="${f.le1}" id="fi-${f.id}-le1"
+          onchange="onInp(${f.id},'le1',this.value)"
+          oninput="onInp(${f.id},'le1',this.value)">
+      </div>
+      <div class="fi-grp">
+        <div class="fi-lbl">L (cm)</div>
+        <input class="fi-inp${wc}" type="number" inputmode="numeric" placeholder="260"
+          value="${f.l}" id="fi-${f.id}-l"
+          onchange="onInp(${f.id},'l',this.value)"
+          oninput="onInp(${f.id},'l',this.value)">
+      </div>
+      <div class="fi-grp">
+        <div class="fi-lbl">G1 (cm)</div>
+        <input class="fi-inp${wc}" type="number" inputmode="numeric" placeholder="70"
+          value="${f.g1}" id="fi-${f.id}-g1"
+          onchange="onInp(${f.id},'g1',this.value)"
+          oninput="onInp(${f.id},'g1',this.value)">
+      </div>
+      <div class="fi-grp">
+        <div class="fi-lbl">G2 (cm)</div>
+        <input class="fi-inp${wc}" type="number" inputmode="numeric" placeholder="70"
+          value="${f.g2}" id="fi-${f.id}-g2"
+          onchange="onInp(${f.id},'g2',this.value)"
+          oninput="onInp(${f.id},'g2',this.value)">
+      </div>
+    </div>
+    <div class="feed-calc">
+      <div class="calc-box blue">
+        <div class="calc-lbl">CBM 1 (m³) · CFT 1</div>
+        <div class="calc-val calc-val-1">${cbm1 > 0 ? cbm1.toFixed(3) + ' · ' + cft1.toFixed(3) : '—'}</div>
+      </div>
+      <div class="calc-box">
+        <div class="calc-lbl">CBM 2 (m³) · CFT 2</div>
+        <div class="calc-val calc-val-2" style="color:var(--green-dk)">${cbm2 > 0 ? cbm2.toFixed(3) + ' · ' + cft2.toFixed(3) : '—'}</div>
+      </div>
+    </div>
+    <div class="feed-warn-msg" style="display:${warn ? '' : 'none'}">⚠️ Measurement below 35 cm</div>
+  </div>`;
 }
 
+/* ── FEED ACTIONS ── */
 function addFeed() {
-  feedCounter++;
-  feeds.push({ id: feedCounter, le1: '', l: '', g1: '', g2: '' });
+  fCounter++;
+  feeds.push({ id: fCounter, le1: '', l: '', g1: '', g2: '' });
   renderFeeds();
   setTimeout(() => {
-    document.getElementById('feed-list').lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    document.getElementById(`fc-${fCounter}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }, 50);
 }
-
-function addFeeds(n) {
-  for (let i = 0; i < n; i++) addFeed();
-}
-
-function deleteFeed(id) {
-  feeds = feeds.filter(f => f.id !== id);
-  renderFeeds();
-}
-
+function addFeeds(n) { for (let i = 0; i < n; i++) addFeed(); }
+function delFeed(id) { feeds = feeds.filter(f => f.id !== id); renderFeeds(); }
 function clearFeeds() {
-  if (!confirm('Clear all logs? This cannot be undone.')) return;
-  feeds = [];
-  feedCounter = 0;
-  renderFeeds();
+  if (!confirm('Clear all logs?')) return;
+  feeds = []; fCounter = 0; renderFeeds();
 }
 
-function onFeedInput(id, field, val) {
-  const feed = feeds.find(f => f.id === id);
-  if (feed) {
-    feed[field] = val;
-    updateStats();
-  }
-}
-
-function renderFeeds() {
-  document.getElementById('feed-list').innerHTML = feeds.map((f, i) => renderFeedCard(f, i)).join('');
+function onInp(id, field, val) {
+  const f = feeds.find(f => f.id === id);
+  if (!f) return;
+  f[field] = val;
+  // NEVER re-render the card — only patch the calc display in-place
+  patchCalc(id);
   updateStats();
 }
 
+// Read live values straight from DOM inputs so we don't destroy focus
+function liveCalc(id) {
+  const g = field => parseFloat(document.getElementById(`fi-${id}-${field}`)?.value) || 0;
+  const le1 = g('le1'), l = g('l'), g1 = g('g1'), g2 = g('g2');
+  const cbm1 = (le1 && g1 && g2) ? +(le1 * g1 * g2 / 16000000).toFixed(3) : 0;
+  const cbm2 = (l   && g1 && g2) ? +(l   * g1 * g2 / 16000000).toFixed(3) : 0;
+  return { cbm1, cbm2, cft1: +(cbm1 * CFT).toFixed(3), cft2: +(cbm2 * CFT).toFixed(3), g1, g2 };
+}
+
+function patchCalc(id) {
+  const { cbm1, cbm2, cft1, cft2, g1, g2 } = liveCalc(id);
+  const card = document.getElementById(`fc-${id}`);
+  if (!card) return;
+
+  // Update calc display spans
+  const b1 = card.querySelector('.calc-val-1');
+  const b2 = card.querySelector('.calc-val-2');
+  if (b1) b1.textContent = cbm1 > 0 ? `${cbm1.toFixed(3)} · ${cft1.toFixed(3)}` : '—';
+  if (b2) b2.textContent = cbm2 > 0 ? `${cbm2.toFixed(3)} · ${cft2.toFixed(3)}` : '—';
+
+  // Warn border if G < 35
+  const warn = (g1 > 0 && g1 < 35) || (g2 > 0 && g2 < 35);
+  card.classList.toggle('warn', warn);
+  card.querySelectorAll('.fi-inp').forEach(inp => inp.classList.toggle('warn-inp', warn));
+  const warnMsg = card.querySelector('.feed-warn-msg');
+  if (warnMsg) warnMsg.style.display = warn ? '' : 'none';
+}
+
+function renderFeeds() {
+  document.getElementById('feed-list').innerHTML =
+    feeds.map((f, i) => feedCardHTML(f, i)).join('');
+  updateStats();
+}
+
+/* ── STATS (top chips) — reads live DOM values so typing updates totals ── */
 function updateStats() {
-  let totalCbm1 = 0, totalCbm2 = 0, validCount = 0;
-  
-  feeds.forEach(feed => {
-    const { cbm1, cbm2, g1, g2 } = calcLog(feed);
-    totalCbm1 += cbm1;
-    totalCbm2 += cbm2;
-    if (g1 > 0 && g2 > 0) validCount++;
+  let cbm1 = 0, cbm2 = 0, n = 0;
+  feeds.forEach(f => {
+    const c = liveCalc(f.id);
+    cbm1 += c.cbm1; cbm2 += c.cbm2;
+    if (c.g1 > 0 && c.g2 > 0) n++;
   });
-  
-  const count = validCount || 1;
-  document.getElementById('s-pcs').textContent = feeds.length;
-  document.getElementById('s-cbm1').textContent = totalCbm1.toFixed(3);
-  document.getElementById('s-cbm2').textContent = totalCbm2.toFixed(3);
-  document.getElementById('s-avg').textContent = (totalCbm1 / count).toFixed(4);
+  const cnt = n || 1;
+  document.getElementById('s-pcs').textContent  = feeds.length;
+  document.getElementById('s-cbm1').textContent = cbm1.toFixed(3);
+  document.getElementById('s-cft1').textContent = (cbm1 * CFT).toFixed(3);
+  document.getElementById('s-cbm2').textContent = cbm2.toFixed(3);
+  document.getElementById('s-cft2').textContent = (cbm2 * CFT).toFixed(3);
+  document.getElementById('s-avg').textContent  = (cbm1 / cnt).toFixed(3);
 }
 
-function submitContainer() {
-  const bl = document.getElementById('f-bl').value.trim();
-  const container = document.getElementById('f-container').value.trim();
-  const supplier = document.getElementById('f-supplier').value;
-  
-  if (!bl) {
-    toast('Enter BL Number', 'error');
-    return;
-  }
-  if (!container) {
-    toast('Enter Container No.', 'error');
-    return;
-  }
-  if (!supplier) {
-    toast('Select Supplier', 'error');
-    return;
-  }
-  
-  const valid = feeds.filter(f => parseFloat(f.g1) > 0 && parseFloat(f.g2) > 0);
-  if (!valid.length) {
-    toast('Fill in log measurements', 'error');
-    return;
-  }
-  
-  document.getElementById('modal-msg').innerHTML = 
-    `<strong>${valid.length} logs</strong> for <strong>${container}</strong> (BL: ${bl})?`;
-  document.getElementById('submit-modal').classList.add('open');
+/* ── SUBMIT ── */
+function doSubmit() {
+  const bl  = document.getElementById('f-bl').value.trim();
+  const cno = document.getElementById('f-container').value.trim();
+  const sup = document.getElementById('f-supplier').value;
+
+  if (!bl)  { toast('Enter BL Number', 'err'); return; }
+  if (!cno) { toast('Enter Container No.', 'err'); return; }
+  if (!sup) { toast('Select Supplier', 'err'); return; }
+
+  const valid = feeds.filter(f => (+f.g1 > 0) && (+f.g2 > 0));
+  if (!valid.length) { toast('Fill in measurements', 'err'); return; }
+
+  document.getElementById('sub-msg').innerHTML =
+    `Submit <strong>${valid.length} logs</strong> for container <strong>${cno}</strong><br>BL: <strong>${bl}</strong>`;
+  document.getElementById('sub-modal').classList.add('open');
 }
 
-function closeSubmitModal() {
-  document.getElementById('submit-modal').classList.remove('open');
-}
+function closeSub() { document.getElementById('sub-modal').classList.remove('open'); }
 
 async function confirmSubmit() {
-  closeSubmitModal();
-  
+  closeSub();
+
   const header = {
-    bl: document.getElementById('f-bl').value.trim(),
+    bl:        document.getElementById('f-bl').value.trim(),
     container: document.getElementById('f-container').value.trim(),
-    supplier: document.getElementById('f-supplier').value,
-    product: document.getElementById('f-product').value,
-    country: document.getElementById('f-country').value,
-    date: document.getElementById('f-date').value,
-    quality: document.getElementById('f-quality').value,
-    incharge: document.getElementById('f-incharge').value,
+    supplier:  document.getElementById('f-supplier').value,
+    product:   document.getElementById('f-product').value,
+    country:   document.getElementById('f-country').value,
+    date:      document.getElementById('f-date').value,
+    quality:   document.getElementById('f-quality').value,
+    incharge:  document.getElementById('f-incharge').value,
   };
-  
-  let totalCbm1 = 0, totalCbm2 = 0, validCount = 0;
-  const logRows = [];
-  
-  feeds.forEach((feed, idx) => {
-    const { cbm1, cbm2, g1, g2 } = calcLog(feed);
-    totalCbm1 += cbm1;
-    totalCbm2 += cbm2;
-    if (g1 > 0 && g2 > 0) validCount++;
-    
-    logRows.push({
-      no: idx + 1,
-      le1: feed.le1,
-      l: feed.l,
-      g1: feed.g1,
-      g2: feed.g2,
-      cbm1: cbm1.toFixed(4),
-      cbm2: cbm2.toFixed(4)
-    });
+
+  let tCbm1 = 0, tCbm2 = 0, validN = 0;
+  const logRows = feeds.map((f, i) => {
+    // Read directly from DOM inputs to get latest typed values
+    const le1 = parseFloat(document.getElementById(`fi-${f.id}-le1`)?.value) || 0;
+    const l   = parseFloat(document.getElementById(`fi-${f.id}-l`)?.value)   || 0;
+    const g1  = parseFloat(document.getElementById(`fi-${f.id}-g1`)?.value)  || 0;
+    const g2  = parseFloat(document.getElementById(`fi-${f.id}-g2`)?.value)  || 0;
+    const cbm1 = (le1 && g1 && g2) ? +(le1 * g1 * g2 / 16000000).toFixed(3) : 0;
+    const cbm2 = (l   && g1 && g2) ? +(l   * g1 * g2 / 16000000).toFixed(3) : 0;
+    const cft1 = +(cbm1 * CFT).toFixed(3);
+    const cft2 = +(cbm2 * CFT).toFixed(3);
+    tCbm1 += cbm1; tCbm2 += cbm2;
+    if (g1 > 0 && g2 > 0) validN++;
+    return { no: i + 1, le1, l, g1, g2,
+             cbm1: cbm1.toFixed(3), cft1: cft1.toFixed(3),
+             cbm2: cbm2.toFixed(3), cft2: cft2.toFixed(3) };
   });
-  
-  const count = validCount || 1;
+
+  const n = validN || 1;
+  const tCft1 = +(tCbm1 * CFT).toFixed(3);
+  const tCft2 = +(tCbm2 * CFT).toFixed(3);
+
   const payload = {
     header,
     logs: logRows,
     summary: {
       pcs: feeds.length,
-      totalCbm1: totalCbm1.toFixed(4),
-      totalCbm2: totalCbm2.toFixed(4),
-      avgCbm1: (totalCbm1 / count).toFixed(4),
-      avgCbm2: (totalCbm2 / count).toFixed(4),
+      totalCbm1: tCbm1.toFixed(3), totalCft1: tCft1.toFixed(3),
+      avgCbm1: (tCbm1 / n).toFixed(3),
+      totalCbm2: tCbm2.toFixed(3), totalCft2: tCft2.toFixed(3),
+      avgCbm2: (tCbm2 / n).toFixed(3),
     }
   };
-  
-  const ex = containers.findIndex(c => c.header.container === header.container && c.header.date === header.date);
-  if (ex >= 0) {
-    containers[ex] = payload;
-  } else {
-    containers.push(payload);
-  }
-  
+
+  // Save/update locally (container + date = unique session key)
+  const key = header.container + '|' + header.date;
+  const ex  = containers.findIndex(c => c.header.container + '|' + c.header.date === key);
+  if (ex >= 0) containers[ex] = payload; else containers.push(payload);
   localStorage.setItem('tt_containers', JSON.stringify(containers));
-  
+
+  // Google Sheets sync
   const gsUrl = document.getElementById('gs-url').value.trim();
   if (gsUrl) {
-    toast('📤 Sending to Sheets…', 'success');
-    try {
-      await fetch(gsUrl, { method: 'POST', body: JSON.stringify(payload) });
-      toast('✅ Saved & Sent!', 'success');
-    } catch {
-      toast('⚠️ Saved locally (Sheets sync failed)', 'error');
-    }
+    toast('📤 Sending to Sheets…', 'ok');
+    try { await fetch(gsUrl, { method: 'POST', body: JSON.stringify(payload) });
+          toast('✅ Saved & Sent!', 'ok'); }
+    catch { toast('⚠️ Saved locally — Sheets failed', 'err'); }
   } else {
-    toast('✅ Saved locally', 'success');
+    toast('✅ Saved locally', 'ok');
   }
-  
-  document.getElementById('f-bl').value = '';
-  document.getElementById('f-container').value = '';
+
+  // Reset entry fields (keep BL/container for multi-day convenience)
+  feeds = []; fCounter = 0;
   document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
-  feeds = [];
-  feedCounter = 0;
   renderFeeds();
-  renderDashboard();
+  renderDash();
 }
 
-function renderDashboard() {
+/* ── DASHBOARD ── */
+function renderDash() {
   renderDropdowns();
-  
-  const search = (document.getElementById('dash-search')?.value || '').toLowerCase();
-  const blFilter = document.getElementById('dash-bl')?.value || '';
-  const countryFilter = document.getElementById('dash-country')?.value || '';
-  
+
+  const search  = (document.getElementById('d-search')?.value  || '').toLowerCase();
+  const blFilt  = document.getElementById('d-bl')?.value      || '';
+  const couFilt = document.getElementById('d-country')?.value || '';
+
   const blMap = {};
-  const filtered = containers.filter(c => {
+  containers.forEach(c => {
     const h = c.header;
-    if (search && !h.bl.toLowerCase().includes(search) && !h.container.toLowerCase().includes(search)) return false;
-    if (blFilter && h.bl !== blFilter) return false;
-    if (countryFilter && h.country !== countryFilter) return false;
-    
+    if (search  && !h.bl.toLowerCase().includes(search) && !h.container.toLowerCase().includes(search)) return;
+    if (blFilt  && h.bl !== blFilt)      return;
+    if (couFilt && h.country !== couFilt) return;
     if (!blMap[h.bl]) blMap[h.bl] = [];
     blMap[h.bl].push(c);
-    return true;
   });
-  
-  document.getElementById('dt-bl').textContent = Object.keys(blMap).length;
-  document.getElementById('dt-cont').textContent = filtered.length;
-  document.getElementById('dt-pcs').textContent = filtered.reduce((s, c) => s + c.summary.pcs, 0);
-  
+
+  const allFiltered = Object.values(blMap).flat();
+  const tCbm1 = allFiltered.reduce((s, c) => s + +c.summary.totalCbm1, 0);
+  const tCbm2 = allFiltered.reduce((s, c) => s + +c.summary.totalCbm2, 0);
+
+  document.getElementById('k-bl').textContent   = Object.keys(blMap).length;
+  document.getElementById('k-cont').textContent = allFiltered.length;
+  document.getElementById('k-pcs').textContent  = allFiltered.reduce((s, c) => s + c.summary.pcs, 0);
+  document.getElementById('k-cbm1').textContent = tCbm1.toFixed(3);
+  document.getElementById('k-cft1').textContent = (tCbm1 * CFT).toFixed(3);
+  document.getElementById('k-cbm2').textContent = tCbm2.toFixed(3);
+
   const list = document.getElementById('dash-list');
-  
   if (!Object.keys(blMap).length) {
-    list.innerHTML = `
-      <div class="empty">
-        <div class="empty-icon">📦</div>
-        <div class="empty-text">No data yet.<br>Create your first entry in Feed tab.</div>
-      </div>
-    `;
+    list.innerHTML = `<div class="empty"><div class="empty-icon">📦</div>
+      <div class="empty-text">No data yet.<br>Go to Feed tab to start.</div></div>`;
     return;
   }
-  
-  let html = '';
-  for (const bl in blMap) {
-    const blContainers = blMap[bl];
-    const totalPcs = blContainers.reduce((s, c) => s + c.summary.pcs, 0);
-    
-    html += `
-      <div class="cont-card" onclick="downloadBLExcel('${bl}')">
-        <div class="cont-head">
-          <span class="cont-id" style="font-size: 18px; color: var(--accent);">📋 ${bl}</span>
-          <span class="cont-meta">${blContainers.length} container(s) · ${totalPcs} pieces</span>
-          <button class="btn btn-small btn-ghost" style="margin-left: auto;" onclick="event.stopPropagation();downloadBLExcel('${bl}')">📥 Excel</button>
+
+  list.innerHTML = Object.entries(blMap).map(([bl, cs]) => {
+    const tPcs  = cs.reduce((s, c) => s + c.summary.pcs, 0);
+    const tC1   = cs.reduce((s, c) => s + +c.summary.totalCbm1, 0);
+    const tC2   = cs.reduce((s, c) => s + +c.summary.totalCbm2, 0);
+    const rows  = cs.map(c => `
+      <div class="cont-row">
+        <span class="cont-no">${escH(c.header.container)}</span>
+        <span class="cont-date">${c.header.date}</span>
+        <span style="font-size:11px;color:var(--mute)">${c.summary.pcs} pcs</span>
+        <div class="pill-wrap">
+          <span class="pill b">CBM1 ${(+c.summary.totalCbm1).toFixed(3)}</span>
+          <span class="pill b">CFT1 ${(+c.summary.totalCft1).toFixed(3)}</span>
+          <span class="pill g">CBM2 ${(+c.summary.totalCbm2).toFixed(3)}</span>
+          <span class="pill g">CFT2 ${(+c.summary.totalCft2).toFixed(3)}</span>
         </div>
-        <div class="pill-row">
-    `;
-    
-    blContainers.forEach(c => {
-      html += `
-        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px; font-size: 12px;">
-          <strong>${c.header.container}</strong><br>
-          <span style="color: var(--text-mute);">${c.header.date}</span>
-        </div>
-      `;
-    });
-    
-    html += `
+      </div>`).join('');
+
+    return `<div class="bl-card">
+      <div class="bl-head">
+        <span class="bl-id">📋 ${escH(bl)}</span>
+        <span class="bl-meta">${cs.length} container(s) · ${tPcs} pcs</span>
+        <button class="btn btn-ghost btn-sm" onclick="dlBL('${escH(bl)}')">📥 Download Excel</button>
+      </div>
+      <div class="bl-body">
+        ${rows}
+        <div style="display:flex;gap:8px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);flex-wrap:wrap">
+          <span class="pill b">Total CBM1 ${tC1.toFixed(3)}</span>
+          <span class="pill b">Total CFT1 ${(tC1*CFT).toFixed(3)}</span>
+          <span class="pill g">Total CBM2 ${tC2.toFixed(3)}</span>
+          <span class="pill g">Total CFT2 ${(tC2*CFT).toFixed(3)}</span>
         </div>
       </div>
-    `;
-  }
-  
-  list.innerHTML = html;
+    </div>`;
+  }).join('');
 }
 
-function downloadBLExcel(bl) {
-  const blContainers = containers.filter(c => c.header.bl === bl);
-  if (!blContainers.length) return;
-  
-  let csv = `BILL OF LADING: ${bl}\nGenerated: ${new Date().toLocaleString()}\n\n`;
-  
-  blContainers.forEach(cont => {
-    csv += `CONTAINER: ${cont.header.container}\n`;
-    csv += `Supplier,Product,Country,Date,Quality,Incharge\n`;
-    csv += `"${cont.header.supplier}","${cont.header.product}","${cont.header.country}","${cont.header.date}","${cont.header.quality}","${cont.header.incharge}"\n\n`;
-    csv += `Log #,LE1 (cm),L (cm),G1 (cm),G2 (cm),CBM1 (m³),CBM2 (m³)\n`;
+/* ── EXCEL DOWNLOAD ── */
+function dlBL(bl) {
+  const cs = containers.filter(c => c.header.bl === bl);
+  if (!cs.length) return;
+
+  let csv = `BILL OF LADING,${bl}\nGenerated,${new Date().toLocaleString()}\n\n`;
+  cs.forEach(cont => {
+    const h = cont.header;
+    csv += `CONTAINER,${h.container}\n`;
+    csv += `BL No,Supplier,Product,Country,Date,Quality,Incharge\n`;
+    csv += `"${h.bl}","${h.supplier}","${h.product}","${h.country}","${h.date}","${h.quality}","${h.incharge}"\n\n`;
+    csv += `Log#,LE1 (cm),L (cm),G1 (cm),G2 (cm),CBM1 (m3),CFT1 (ft3),CBM2 (m3),CFT2 (ft3)\n`;
     cont.logs.forEach(l => {
-      csv += `${l.no},${l.le1},${l.l},${l.g1},${l.g2},${l.cbm1},${l.cbm2}\n`;
+      csv += `${l.no},${l.le1},${l.l},${l.g1},${l.g2},${l.cbm1},${l.cft1},${l.cbm2},${l.cft2}\n`;
     });
-    csv += `\nSummary,Total Pcs,Total CBM1,Total CBM2,Avg CBM1,Avg CBM2\n`;
-    csv += `"","${cont.summary.pcs}","${cont.summary.totalCbm1}","${cont.summary.totalCbm2}","${cont.summary.avgCbm1}","${cont.summary.avgCbm2}"\n\n`;
+    const s = cont.summary;
+    csv += `\nSummary,Pcs,TotalCBM1,TotalCFT1,AvgCBM1,TotalCBM2,TotalCFT2,AvgCBM2\n`;
+    csv += `,"${s.pcs}","${s.totalCbm1}","${s.totalCft1}","${s.avgCbm1}","${s.totalCbm2}","${s.totalCft2}","${s.avgCbm2}"\n\n`;
   });
-  
+
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = `TimberTrack_${bl}.csv`;
-  link.click();
-  toast(`Downloaded ${bl}`, 'success');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `TimberTrack_BL_${bl}.csv`;
+  a.click();
+  toast(`Downloaded ${bl}`, 'ok');
 }
 
+/* ── ADD SUPPLIER/COUNTRY MODAL ── */
+function openAdd(type) {
+  addTarget = type;
+  document.getElementById('add-title').textContent =
+    type === 'supplier' ? 'Add Supplier' : 'Add Country';
+  document.getElementById('add-input').value = '';
+  document.getElementById('add-modal').classList.add('open');
+  setTimeout(() => document.getElementById('add-input').focus(), 120);
+}
+function closeAdd() { document.getElementById('add-modal').classList.remove('open'); }
+function confirmAdd() {
+  const val = document.getElementById('add-input').value.trim();
+  if (!val) { toast('Enter a name', 'err'); return; }
+  if (addTarget === 'supplier') {
+    if (!suppliers.includes(val)) { suppliers.push(val); localStorage.setItem('tt_suppliers', JSON.stringify(suppliers)); }
+    renderDropdowns();
+    document.getElementById('f-supplier').value = val;
+    toast('Supplier added', 'ok');
+  } else {
+    if (!countries.includes(val)) { countries.push(val); localStorage.setItem('tt_countries', JSON.stringify(countries)); }
+    renderDropdowns();
+    document.getElementById('f-country').value = val;
+    toast('Country added', 'ok');
+  }
+  closeAdd();
+}
+
+/* ── CONFIG ── */
 function saveConfig() {
   config.gsUrl = document.getElementById('gs-url').value;
   localStorage.setItem('tt_config', JSON.stringify(config));
 }
-
-async function testConnection() {
+async function testGS() {
   const url = document.getElementById('gs-url').value.trim();
-  if (!url) {
-    toast('Enter Apps Script URL first', 'error');
-    return;
-  }
+  if (!url) { toast('Enter URL first', 'err'); return; }
   try {
     await fetch(url);
     document.getElementById('gs-status').innerHTML = '✅ Connected!';
-    document.getElementById('gs-status').style.color = 'var(--accent)';
-    toast('✅ Connected!', 'success');
+    document.getElementById('gs-status').style.color = 'var(--green)';
+    toast('Connected!', 'ok');
   } catch {
-    document.getElementById('gs-status').innerHTML = '❌ Connection failed';
+    document.getElementById('gs-status').innerHTML = '❌ Failed';
     document.getElementById('gs-status').style.color = 'var(--danger)';
-    toast('Connection failed', 'error');
+    toast('Connection failed', 'err');
   }
 }
 
-function toast(msg, type = 'success') {
+/* ── HELPERS ── */
+function escH(s) { return String(s).replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+
+function toast(msg, type) {
   const el = document.createElement('div');
   el.className = `toast ${type}`;
   el.textContent = msg;
-  document.getElementById('toast-wrap').appendChild(el);
-  setTimeout(() => el.remove(), 3200);
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(() => el.remove(), 3000);
 }
 </script>
-
 </body>
 </html>
